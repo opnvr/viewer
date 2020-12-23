@@ -1,11 +1,11 @@
 {
-  "name": "poc-mp4-websocket",
+  "name": "nvrviewer",
   "version": "1.0.0",
-  "description": "Proof of concept to demonstrate streaming with websockets.",
-  "main": "ws.js",
+  "description": "NVR 3x3 cam viewer",
+  "main": "index.js",
   "scripts": {
-    "http-server": "node_modules/http-server/bin/http-server -p 8000",
-    "ws-server": "node ws.js 8081 8082"
+    "docker:build": "docker build -t ghcr.io/timbailey-pnk/nvrviewer .",
+    "docker:push": "docker push ghcr.io/timbailey-pnk/nvrviewer"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,9 @@
     "big-integer": "^1.6.22",
     "fluent-ffmpeg": "^2.1.2",
     "http-server": "^0.10.0",
+    "koa": "^2.13.0",
+    "koa-static": "^5.0.0",
+    "koa-websocket": "^6.0.0",
     "ws": "^2.3.1"
   }
 }

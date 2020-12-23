@@ -194,7 +194,7 @@
             8: videoSource(8, '#videoPlayer7 > video')
         }
 
-        var websocket = new WebSocket('ws://' + document.location.hostname +':8082');
+        var websocket = new WebSocket('ws://' + document.location.hostname +':8000');
         websocket.binaryType = 'arraybuffer';
 
         websocket.addEventListener('message', function(e) {
