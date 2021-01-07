@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/eventials/poc-mp4-websocket#readme",
   "dependencies": {
-    "big-integer": "^1.6.22",
+    "big-integer": "^1.6.48",
     "fluent-ffmpeg": "^2.1.2",
-    "http-server": "^0.10.0",
-    "koa": "^2.13.0",
+    "http-server": "^0.12.3",
+    "koa": "^2.13.1",
     "koa-static": "^5.0.0",
     "koa-websocket": "^6.0.0",
-    "ws": "^2.3.1"
+    "needle": "^2.6.0",
+    "ws": "^7.4.2",
+    "xml2js": "^0.4.23"
   }
 }

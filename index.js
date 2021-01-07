@@ -148,3 +148,68 @@ videoConsumer(5)
 videoConsumer(6)
 videoConsumer(7)
 videoConsumer(8)
+
+const http = require('http');
+var	xml2js = require('xml2js');
+var	parser = new xml2js.Parser({ explicitArray: false });
+const regex = /^.*?</s;
+const needle = require('needle');
+
+function videoMonitor(camera) {
+    needle
+        .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, { 
+            username: 'admin', 
+            password: 'Milly Lola 810', 
+            auth: 'digest'
+        })
+        .on('response', response => {
+            console.log('Response')
+            response.on('data', buffer => {
+                // console.log('----------------------------------------------------'+ camera)
+                let data = buffer.toString('utf8')
+                // console.log('response data', data)
+    
+                // Strip off lines that dont start with a xml <
+                data = data.replace(regex, '<')
+                // console.log('response data', data)
+    
+                if(data.indexOf('<EventNotificationAlert') > -1) {
+                    parser.parseString(data, (err, result) => {
+                        if(err) {
+                            console.error('Failed', err)
+                        }
+                        if(result) {
+                            console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
+                            if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'VMD') {
+                                
+                                if(result.EventNotificationAlert.eventState === 'active') {
+                                    broadcast(camera, 50, new Uint8Array(1));
+                                } else {
+                                    broadcast(camera, 51, new Uint8Array(1));
+                                }
+                                
+                            }
+                            
+                        } 
+                    })
+                }
+            })
+        })
+        .on('done', (err, resp) => {
+            if(err) {
+                console.error('error = ', err)
+            }
+            console.log('resp = ', resp)
+        })
+        .on('error', (e) => {
+            console.error(`problem with request: ${e.message}`);
+        });
+}
+
+videoMonitor(2)
+videoMonitor(3)
+videoMonitor(4)
+videoMonitor(5)
+videoMonitor(6)
+videoMonitor(7)
+videoMonitor(8)

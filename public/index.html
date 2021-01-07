@@ -105,12 +105,13 @@
         function videoSource (id, selector) {
             var buffer;
             var websocket;
+            let motion = false
 
             // Pre alloc buffer due updating delay
             var buffer_size = 5*1024*1024;
             var buffer_index = 0;
             var frag_mp4_buffer = new Uint8Array(buffer_size);
-            var video = document.querySelector(selector);
+            var video = document.querySelector(selector + ' > video');
             var mediaSource = new MediaSource();
 
             // mediaSource.addEventListener('sourceended', function(e) { console.log('sourceended: ' + mediaSource.readyState); });
@@ -121,7 +122,7 @@
             video.playbackRate = 1.06
 
             mediaSource.addEventListener('sourceopen', function(e) {
-                console.log('sourceopen: ' + mediaSource.readyState);
+                // console.log('sourceopen: ' + mediaSource.readyState);
 
                 buffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E"');
                 buffer.mode = 'sequence'
@@ -147,17 +148,42 @@
                     }
                 }
                 
-                console.log('buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
+                // console.log('buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
                 const bufferedLength = buffer.buffered.end(0) - buffer.buffered.start(0)
                 if(!buffer.updating && bufferedLength > 60) {
                     buffer.remove(buffer.buffered.start(0), buffer.buffered.start(0) + (bufferedLength / 2))
-                    console.log('...remove half of the buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
+                    // console.log('...remove half of the buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
                 }
                 
             }, 5000)
 
             return {
                 handleData: (msgtype, data) => {
+
+                    if(msgtype === 50) { // Motion start
+                        console.log(`Camera ${id} motion start`)
+                        if(!motion) {
+                            motion = true
+                            setTimeout(() => {
+                                var span = document.querySelector(selector + ' > span.status');
+                                span.innerHTML = ''
+                                motion = false
+                            }, 10000)
+                            playSound('notify.mp3');
+                            var span = document.querySelector(selector + ' > span.status');
+                            span.innerHTML = 'MOTION'
+                        }
+                        return
+                    }
+
+                    if(msgtype === 51) { // Motion end
+                        console.log(`Camera ${id} motion end`)
+                        motion = false
+                        var span = document.querySelector(selector + ' > span.status');
+                        span.innerHTML = ''
+                        return
+                    }
+
                     if(msgtype === 99) {
                         // ftyp_moov, reset sourceBuffer
                         buffer_index = 0;
@@ -185,13 +211,13 @@
         }
 
         const buffers = {
-            2: videoSource(2, '#videoPlayer1 > video'),
-            3: videoSource(3, '#videoPlayer2 > video'),
-            4: videoSource(4, '#videoPlayer3 > video'),
-            5: videoSource(5, '#videoPlayer4 > video'),
-            6: videoSource(6, '#videoPlayer5 > video'),
-            7: videoSource(7, '#videoPlayer6 > video'),
-            8: videoSource(8, '#videoPlayer7 > video')
+            2: videoSource(2, '#videoPlayer1'),
+            3: videoSource(3, '#videoPlayer2'),
+            4: videoSource(4, '#videoPlayer3'),
+            5: videoSource(5, '#videoPlayer4'),
+            6: videoSource(6, '#videoPlayer5'),
+            7: videoSource(7, '#videoPlayer6'),
+            8: videoSource(8, '#videoPlayer7')
         }
 
         var websocket = new WebSocket('ws://' + document.location.hostname +':8000');
@@ -210,7 +236,17 @@
         }, false);
         
     })();
+
+function playSound(url) {
+//   const audio = new Audio(url);
+//   audio.play();
+
+  document.getElementById('notification').muted = false;
+ document.getElementById('notification').play();
+}
     </script>
 
+<audio id="notification" src="notify.mp3" muted></audio>
+<button onclick="playSound('notify.mp3');">Play</button>  
 </body>
 </html>
