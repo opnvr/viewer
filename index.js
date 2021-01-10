@@ -154,6 +154,7 @@ var	xml2js = require('xml2js');
 var	parser = new xml2js.Parser({ explicitArray: false });
 const regex = /^.*?</s;
 const needle = require('needle');
+const NetKeepAlive = require('net-keepalive');
 
 function videoMonitor(camera) {
     const agent = new http.Agent({keepAlive: true});
@@ -166,6 +167,11 @@ function videoMonitor(camera) {
         })
         .on('response', response => {
             console.log('Response')
+
+            response.connection.setKeepAlive(true, 1000)
+            NetKeepAlive.setKeepAliveInterval(response.connection,5000)	// sets TCP_KEEPINTVL to 5s
+		    NetKeepAlive.setKeepAliveProbes(response.connection, 12)	// 60s and kill the connection.
+
             response.on('data', buffer => {
                 console.log('----------------------------------------------------'+ camera)
                 let data = buffer.toString('utf8')
