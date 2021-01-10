@@ -220,20 +220,34 @@
             8: videoSource(8, '#videoPlayer7')
         }
 
-        var websocket = new WebSocket('ws://' + document.location.hostname +':8000');
-        websocket.binaryType = 'arraybuffer';
+        function connect() {
+            var websocket = new WebSocket('ws://' + document.location.hostname +':8000');
+            websocket.binaryType = 'arraybuffer';
+            
+            websocket.addEventListener('message', function(e) {
+                var o = new Uint8Array(e.data);
+                const id = o.slice(0, 1)[0]
+                const msgtype = o.slice(1, 2)[0]
+                // console.log('Header', { id, msgtype })
+                const data = o.slice(2)
 
-        websocket.addEventListener('message', function(e) {
-            var o = new Uint8Array(e.data);
-            const id = o.slice(0, 1)[0]
-            const msgtype = o.slice(1, 2)[0]
-            // console.log('Header', { id, msgtype })
-            const data = o.slice(2)
+                if (data.length) {
+                    buffers[id].handleData(msgtype, data)
+                }
+            }, false);
 
-            if (data.length) {
-                buffers[id].handleData(msgtype, data)
-            }
-        }, false);
+            websocket.addEventListener('open', function (event) {
+                console.log('WS Connected!')
+            })
+
+            websocket.addEventListener('close', function(e) {
+                console.log('WS Disconnected!, retry in 5 secs')
+                setTimeout(() => connect(), 5000)
+            })
+        }
+
+        connect()
+        
         
     })();
 
