@@ -156,16 +156,18 @@ const regex = /^.*?</s;
 const needle = require('needle');
 
 function videoMonitor(camera) {
+    const agent = new http.Agent({keepAlive: true});
     needle
         .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, { 
             username: 'admin', 
             password: 'Milly Lola 810', 
-            auth: 'digest'
+            auth: 'digest',
+            agent
         })
         .on('response', response => {
             console.log('Response')
             response.on('data', buffer => {
-                // console.log('----------------------------------------------------'+ camera)
+                console.log('----------------------------------------------------'+ camera)
                 let data = buffer.toString('utf8')
                 // console.log('response data', data)
     
