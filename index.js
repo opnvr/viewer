@@ -148,6 +148,7 @@ videoConsumer(5)
 videoConsumer(6)
 videoConsumer(7)
 videoConsumer(8)
+videoConsumer(9)
 
 const http = require('http');
 var	xml2js = require('xml2js');
@@ -221,3 +222,4 @@ videoMonitor(5)
 videoMonitor(6)
 videoMonitor(7)
 videoMonitor(8)
+videoMonitor(9)
