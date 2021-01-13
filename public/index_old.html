@@ -4,37 +4,36 @@
 <head>
     <title>NVR Viewer</title>
     <style>
-        body, html {
+        html,
+        body {
+            min-height: 100%;
             margin: 0;
-            height: 100%;
             background-color: black;
+            overflow-y: hide;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            gap: 0px 0px;
-            grid-template-areas:
-                "vp1 vp2 vp3"
-                "vp4 vp5 vp6"
-                "vp7 vp8 vp9";
-        }
-
-        .vp1 { grid-area: vp1; }
-        .vp2 { grid-area: vp2; }
-        .vp3 { grid-area: vp3; }
-        .vp4 { grid-area: vp4; }
-        .vp5 { grid-area: vp5; }
-        .vp6 { grid-area: vp6; }
-        .vp7 { grid-area: vp7; }
-        .vp8 { grid-area: vp8; }
-        .vp9 { grid-area: vp9; }
-
-        video {
-            object-fit: fill;
-            width: 100%;
+        .grid2x2 {
             height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            align-items: stretch;
+        }
+
+        .grid2x2>div {
+            display: flex;
+            flex-basis: 33%;
+            justify-content: center;
+            flex-direction: column;
+            /*height: 302px;*/
+        }
+
+        .grid2x2>div>video {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            width: 100%;
+            object-fit: fill;
         }
 
         .box {
@@ -45,7 +44,15 @@
             color: white;
             position: absolute;
             left: 5px;
-            bottom: 5px;
+            bottom: 0;
+            background-color: black;
+        }
+
+        .box > span.state {
+            color: white;
+            position: absolute;
+            left: 5px;
+            bottom: 20px;
             background-color: black;
         }
 
@@ -53,55 +60,52 @@
 </head>
 
 <body>
-    <div class="grid-container">
-        <div class="vp1 box">
+    <div class="grid2x2">
+        <div class="box" id="videoPlayer1">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp2 box">
+        <div class="box" id="videoPlayer2">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp3 box">
+        <div class="box" id="videoPlayer3">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp4 box">
+        <div class="box" id="videoPlayer4">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp5 box">
+
+        <div class="box" id="videoPlayer5">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp6 box">
+        <div class="box" id="videoPlayer6">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp7 box">
+        <div class="box" id="videoPlayer7">
             <video autoplay muted></video>
             <span class="status"></span>
+            <span class="state"></span>
         </div>
-        <div class="vp8 box">
+        <div class="box" id="videoPlayer8">
             <video autoplay muted></video>
             <span class="status"></span>
-        </div>
-        <div class="vp9 box">
-            <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="state"></span>
         </div>
     </div>
 
-   
-<script type="text/javascript">
+    <script type="text/javascript">
     (function () {
-
-        const styleSheet = document.head.querySelector('style').sheet
-        let index = styleSheet.insertRule(`.box { height: ${window.innerHeight / 3}px; }`)
-        window.addEventListener('resize', () => {
-            styleSheet.deleteRule(index)
-            index = styleSheet.insertRule(`.box { height: ${window.innerHeight / 3}px; }`)
-        });
 
         function videoSource (id, selector) {
             var buffer;
@@ -212,14 +216,14 @@
         }
 
         const buffers = {
-            2: videoSource(2, '.vp1'),
-            3: videoSource(3, '.vp2'),
-            4: videoSource(4, '.vp3'),
-            5: videoSource(5, '.vp4'),
-            6: videoSource(6, '.vp5'),
-            7: videoSource(7, '.vp6'),
-            8: videoSource(8, '.vp7'),
-            9: videoSource(9, '.vp8')
+            2: videoSource(2, '#videoPlayer1'),
+            3: videoSource(3, '#videoPlayer2'),
+            4: videoSource(4, '#videoPlayer3'),
+            5: videoSource(5, '#videoPlayer4'),
+            6: videoSource(6, '#videoPlayer5'),
+            7: videoSource(7, '#videoPlayer6'),
+            8: videoSource(8, '#videoPlayer7'),
+            9: videoSource(9, '#videoPlayer8')
         }
 
         function connect() {
@@ -257,13 +261,16 @@
         setTimeout(() => location.reload(), timeToMidnight);
     })();
 
-function playSound() {
-  const audio = new Audio('notify.mp3');
-  audio.play();
-}
-    
-</script>
+function playSound(url) {
+//   const audio = new Audio(url);
+//   audio.play();
 
+  document.getElementById('notification').muted = false;
+ document.getElementById('notification').play();
+}
+    </script>
+
+<audio id="notification" src="notify.mp3" muted></audio>
 <button onclick="playSound('notify.mp3');">Play</button>  
 </body>
 </html>
