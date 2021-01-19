@@ -155,10 +155,66 @@ var	xml2js = require('xml2js');
 var	parser = new xml2js.Parser({ explicitArray: false });
 const regex = /^.*?</s;
 const needle = require('needle');
-// const NetKeepAlive = require('net-keepalive');
+const DelimiterStream = require('delimiter-stream');
 
 function videoMonitor(camera) {
-    const agent = new http.Agent({keepAlive: true});
+    const delimiterstream = new DelimiterStream({
+        delimiter: '--boundary'
+    })
+
+    delimiterstream.on('data', function(chunk) {
+        const originalData = chunk.toString('utf8')
+        const data = originalData.replace(regex, '<')
+        console.log('Delimter', data);
+
+        if (data.indexOf('<EventNotificationAlert') > -1) {
+            parser.parseString(data, (err, result) => {
+                if(err) {
+                    console.error('Failed', err)
+                }
+                if(result) {
+                    console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
+                    if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'VMD') {
+                        
+                        if(result.EventNotificationAlert.eventState === 'active') {
+                            broadcast(camera, 50, new Uint8Array(1));
+                        } else {
+                            broadcast(camera, 51, new Uint8Array(1));
+                        }
+                        
+                    }
+                    
+                } 
+            })
+        } 
+    });
+
+    const agent = new http.Agent({keepAlive: true, });
+    const stream = needle
+        .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, { 
+            username: 'admin', 
+            password: 'Milly Lola 810', 
+            auth: 'digest',
+            agent,
+            parse: false
+        })
+
+    stream.pipe(delimiterstream)
+    // stream.on('readable', function() {
+    //     var chunk;
+    //     while (chunk = this.read()) {
+    //         const originalData = chunk.toString('utf8')
+    //         console.log('response data', originalData)
+    //     }
+    //     });       
+        
+    stream.on('done', function(err) {
+        if (err) console.log('An error ocurred: ' + err.message);
+        else console.log('Great success!');
+        })
+}
+function videoMonitorX(camera) {
+    const agent = new http.Agent({keepAlive: true, });
     needle
         .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, { 
             username: 'admin', 
@@ -173,13 +229,43 @@ function videoMonitor(camera) {
             // NetKeepAlive.setKeepAliveInterval(response.connection,5000)	// sets TCP_KEEPINTVL to 5s
 		    // NetKeepAlive.setKeepAliveProbes(response.connection, 12)	// 60s and kill the connection.
 
+            response.on('close', a => {
+                console.log('************* close', a)
+            })
+            response.on('finish', a => {
+                console.log('************* finish', a)
+            })
+            response.on('aborted', a => {
+                console.log('************* aborted', a)
+            })
+            response.on('abort', a => {
+                console.log('************* abort', a)
+            })
+            response.on('connect', a => {
+                console.log('************* connect', a)
+            })
+            response.on('continue', a => {
+                console.log('************* continue', a)
+            })
+            response.on('information', a => {
+                console.log('************* information', a)
+            })
+            response.on('socket', a => {
+                console.log('************* socket', a)
+            })
+            response.on('timeout', a => {
+                console.log('************* timeout', a)
+            })
+            response.on('upgrade', a => {
+                console.log('************* upgrade', a)
+            })
             response.on('data', buffer => {
                 console.log('----------------------------------------------------'+ camera)
-                let data = buffer.toString('utf8')
-                // console.log('response data', data)
+                const originalData = buffer.toString('utf8')
+                console.log('response data', originalData)
     
                 // Strip off lines that dont start with a xml <
-                data = data.replace(regex, '<')
+                const data = originalData.replace(regex, '<')
                 // console.log('response data', data)
     
                 if(data.indexOf('<EventNotificationAlert') > -1) {
@@ -201,6 +287,8 @@ function videoMonitor(camera) {
                             
                         } 
                     })
+                } else {
+                    console.log('No data found', originalData)
                 }
             })
         })
@@ -212,7 +300,10 @@ function videoMonitor(camera) {
         })
         .on('error', (e) => {
             console.error(`problem with request: ${e.message}`);
-        });
+        })
+        .on('timeout', (e) => {
+            console.error(`timeout: ${e.message}`);
+        })
 }
 
 videoMonitor(2)
