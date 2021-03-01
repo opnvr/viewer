@@ -165,7 +165,6 @@ function videoMonitor(camera) {
     delimiterstream.on('data', function(chunk) {
         const originalData = chunk.toString('utf8')
         const data = originalData.replace(regex, '<')
-        console.log('Delimter', data);
 
         if (data.indexOf('<EventNotificationAlert') > -1) {
             parser.parseString(data, (err, result) => {
@@ -173,17 +172,26 @@ function videoMonitor(camera) {
                     console.error('Failed', err)
                 }
                 if(result) {
-                    console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
+                    if (result.EventNotificationAlert.eventState != 'inactive' && result.EventNotificationAlert.eventType !== 'videoloss') {
+                      console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
+                      console.log('Data', data)
+                    }
+
                     if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'VMD') {
-                        
                         if(result.EventNotificationAlert.eventState === 'active') {
                             broadcast(camera, 50, new Uint8Array(1));
                         } else {
                             broadcast(camera, 51, new Uint8Array(1));
                         }
-                        
                     }
                     
+                    if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'linedetection') {
+                        if(result.EventNotificationAlert.eventState === 'active') {
+                            broadcast(camera, 52, new Uint8Array(1));
+                        } else {
+                            broadcast(camera, 53, new Uint8Array(1));
+                        }
+                    }
                 } 
             })
         } 

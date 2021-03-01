@@ -49,6 +49,14 @@
             background-color: black;
         }
 
+        .box > span.linecross {
+            color: white;
+            position: absolute;
+            left: 75px;
+            bottom: 5px;
+            background-color: rgb(151, 41, 41);
+        }
+
     </style>
 </head>
 
@@ -56,39 +64,39 @@
     <div class="grid-container">
         <div class="vp1 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp2 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp3 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp4 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp5 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp6 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp7 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp8 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
         <div class="vp9 box">
             <video autoplay muted></video>
-            <span class="status"></span>
+            <span class="status"></span><span class="linecross"></span>
         </div>
     </div>
 
@@ -170,7 +178,7 @@
                                 span.innerHTML = ''
                                 motion = false
                             }, 10000)
-                            playSound('notify.mp3');
+                            playSound('notify.mp3', 0.25);
                             var span = document.querySelector(selector + ' > span.status');
                             span.innerHTML = 'MOTION'
                         }
@@ -181,6 +189,30 @@
                         console.log(`Camera ${id} motion end`)
                         motion = false
                         var span = document.querySelector(selector + ' > span.status');
+                        span.innerHTML = ''
+                        return
+                    }
+
+                    if(msgtype === 52) { // line cross start
+                        console.log(`Camera ${id} line cross start`)
+                        if(!motion) {
+                            motion = true
+                            setTimeout(() => {
+                                var span = document.querySelector(selector + ' > span.linecross');
+                                span.innerHTML = ''
+                                motion = false
+                            }, 10000)
+                            playSound('linecross.mp3');
+                            var span = document.querySelector(selector + ' > span.linecross');
+                            span.innerHTML = 'LINE'
+                        }
+                        return
+                    }
+
+                    if(msgtype === 53) { // line cross end
+                        console.log(`Camera ${id} line cross end`)
+                        motion = false
+                        var span = document.querySelector(selector + ' > span.linecross');
                         span.innerHTML = ''
                         return
                     }
@@ -257,8 +289,9 @@
         setTimeout(() => location.reload(), timeToMidnight);
     })();
 
-function playSound() {
-  const audio = new Audio('notify.mp3');
+function playSound(file, volume) {
+  const audio = new Audio(file);
+  audio.volume = volume || 1
   audio.play();
 }
     
