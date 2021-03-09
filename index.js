@@ -24,6 +24,7 @@ app.listen(8000);
 
 const MP4_FTYP = 1718909296;
 const MP4_MOOV = 1836019574;
+const MP4_MDAT = 1835295092;
 
 const headers = {
 }
@@ -54,26 +55,29 @@ function parseMP4(camera, dataView, offset, size)
     {
         var len = dataView.getUint32(offset);
         var type = dataView.getInt32(offset + 4);
+        console.log('...', len, type)
 
         if (len == 1)
         {
             // Extended size
+            console.log('entended size')
             len = getUint64(dataView, offset + 8);
         }
 
         headers[camera] = headers[camera] || {}
         if (type === MP4_FTYP) {
-            console.log('Got MP4_FTYP', offset, len)
-            headers[camera].ftyp = new Uint8Array(dataView.buffer.slice(offset, len));
+            console.log(`CAM${camera.toString().padStart(2, '0')} Got MP4_FTYP`, offset, len)
+            headers[camera].ftyp = new Uint8Array(dataView.buffer.slice(offset, offset + len));
+            // console.log('FTYP', headers[camera].ftyp.buffer)
         } else if (type === MP4_MOOV) {
-            console.log('Got MP4_MOOV', offset, len)
-            headers[camera].moov = new Uint8Array(dataView.buffer.slice(offset, len));
-            break;
+            console.log(`CAM${camera.toString().padStart(2, '0')} Got MP4_MOOV`, offset, len)
+            headers[camera].moov = new Uint8Array(dataView.buffer.slice(offset, offset + len));
+            // console.log('MOOV', headers[camera].moov.buffer)
         }
 
         offset = offset + len;
     }
-    console.log('....finished parseMp4')
+    console.log('------finished parseMp4')
 }
 
 function initFragment(camera, buffer) {
@@ -100,8 +104,8 @@ function broadcast (id, type, data) {
         if (client.readyState === WebSocketOpen) {
             if (!client.sentHeaders.has(id)) {
                 sendFTYPMOOV(id, client)
-            } 
-            
+            }
+
             sendObject(client, id, type, data);
         }
     });
@@ -184,7 +188,7 @@ function videoMonitor(camera) {
                             broadcast(camera, 51, new Uint8Array(1));
                         }
                     }
-                    
+
                     if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'linedetection') {
                         if(result.EventNotificationAlert.eventState === 'active') {
                             broadcast(camera, 52, new Uint8Array(1));
@@ -192,16 +196,16 @@ function videoMonitor(camera) {
                             broadcast(camera, 53, new Uint8Array(1));
                         }
                     }
-                } 
+                }
             })
-        } 
+        }
     });
 
     const agent = new http.Agent({keepAlive: true, });
     const stream = needle
-        .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, { 
-            username: 'admin', 
-            password: 'Milly Lola 810', 
+        .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, {
+            username: 'admin',
+            password: 'Milly Lola 810',
             auth: 'digest',
             agent,
             parse: false
@@ -214,103 +218,11 @@ function videoMonitor(camera) {
     //         const originalData = chunk.toString('utf8')
     //         console.log('response data', originalData)
     //     }
-    //     });       
-        
+    //     });
+
     stream.on('done', function(err) {
         if (err) console.log('An error ocurred: ' + err.message);
         else console.log('Great success!');
-        })
-}
-function videoMonitorX(camera) {
-    const agent = new http.Agent({keepAlive: true, });
-    needle
-        .get(`http://192.168.1.2${camera.toString().padStart(2, '0')}/ISAPI/Event/notification/alertStream`, { 
-            username: 'admin', 
-            password: 'Milly Lola 810', 
-            auth: 'digest',
-            agent
-        })
-        .on('response', response => {
-            console.log('Response')
-
-            response.connection.setKeepAlive(true, 1000)
-            // NetKeepAlive.setKeepAliveInterval(response.connection,5000)	// sets TCP_KEEPINTVL to 5s
-		    // NetKeepAlive.setKeepAliveProbes(response.connection, 12)	// 60s and kill the connection.
-
-            response.on('close', a => {
-                console.log('************* close', a)
-            })
-            response.on('finish', a => {
-                console.log('************* finish', a)
-            })
-            response.on('aborted', a => {
-                console.log('************* aborted', a)
-            })
-            response.on('abort', a => {
-                console.log('************* abort', a)
-            })
-            response.on('connect', a => {
-                console.log('************* connect', a)
-            })
-            response.on('continue', a => {
-                console.log('************* continue', a)
-            })
-            response.on('information', a => {
-                console.log('************* information', a)
-            })
-            response.on('socket', a => {
-                console.log('************* socket', a)
-            })
-            response.on('timeout', a => {
-                console.log('************* timeout', a)
-            })
-            response.on('upgrade', a => {
-                console.log('************* upgrade', a)
-            })
-            response.on('data', buffer => {
-                console.log('----------------------------------------------------'+ camera)
-                const originalData = buffer.toString('utf8')
-                console.log('response data', originalData)
-    
-                // Strip off lines that dont start with a xml <
-                const data = originalData.replace(regex, '<')
-                // console.log('response data', data)
-    
-                if(data.indexOf('<EventNotificationAlert') > -1) {
-                    parser.parseString(data, (err, result) => {
-                        if(err) {
-                            console.error('Failed', err)
-                        }
-                        if(result) {
-                            console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
-                            if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'VMD') {
-                                
-                                if(result.EventNotificationAlert.eventState === 'active') {
-                                    broadcast(camera, 50, new Uint8Array(1));
-                                } else {
-                                    broadcast(camera, 51, new Uint8Array(1));
-                                }
-                                
-                            }
-                            
-                        } 
-                    })
-                } else {
-                    console.log('No data found', originalData)
-                }
-            })
-        })
-        .on('done', (err, resp) => {
-            if(err) {
-                console.error('error = ', err)
-            }
-            console.log('resp = ', resp)
-        })
-        .on('error', (e) => {
-            console.error(`problem with request: ${e.message}`);
-        })
-        .on('timeout', (e) => {
-            console.error(`timeout: ${e.message}`);
         })
 }
 
