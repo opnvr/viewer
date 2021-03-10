@@ -196,6 +196,8 @@ function videoMonitor(camera) {
                             broadcast(camera, 53, new Uint8Array(1));
                         }
                     }
+
+                    // fielddetection
                 }
             })
         }
