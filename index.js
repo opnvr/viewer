@@ -134,7 +134,7 @@ function videoConsumer (camera) {
     const ffstream = command.pipe()
     ffstream.on('data', function(data) {
             if (!headers[camera] || !headers[camera].moov) {
-                console.log('Get ftyp & moov fragments')
+                // console.log('Get ftyp & moov fragments')
                 initFragment(camera, data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
 
                 app.ws.server.clients.forEach(function each(client) {
@@ -177,8 +177,8 @@ function videoMonitor(camera) {
                 }
                 if(result) {
                     if (result.EventNotificationAlert.eventState != 'inactive' && result.EventNotificationAlert.eventType !== 'videoloss') {
-                      console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
-                      console.log('Data', data)
+                      // console.log(camera, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
+                      // console.log('Data', data)
                     }
 
                     if(result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'VMD') {
@@ -236,3 +236,21 @@ videoMonitor(6)
 videoMonitor(7)
 videoMonitor(8)
 videoMonitor(9)
+
+// Listen for notifications
+var mqtt = require('mqtt')
+var client  = mqtt.connect('tcp://192.168.1.53', { username: 'iot', password: 'w4kz7nB6ACw5rp' })
+ 
+client.on('connect', function () {
+  client.subscribe('notify/cam/+', function (err) {
+    console.log('Subscribed to notify/cam/+')
+  })
+})
+ 
+client.on('message', function (topic, message) {  
+  const camera = topic.replace('notify/cam/', '')
+  console.log(topic, camera, message.toString())
+
+  const data = new Uint8Array(message)
+  broadcast(camera, 60, data);
+})
