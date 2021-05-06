@@ -57,6 +57,26 @@
             background-color: rgb(151, 41, 41);
         }
 
+        .box > span.notify {
+            color: black;
+            position: absolute;
+            left: 0;
+            text-align: center;
+            line-height: 30px;
+            width: 100%;
+            bottom: 70px;
+            background-color: rgb(237, 181, 39);
+            opacity: 0.75;
+        }
+
+        .box > span.notify:before {
+            content: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm3.9-11.7L10 14.2l-1.9-1.9c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l2.6 2.6c.4.4 1 .4 1.4 0l6.6-6.6c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z"/></svg>');
+
+            display: inline-block;
+            height: 20px;
+            width: 20px;
+        }
+
     </style>
 </head>
 
@@ -64,39 +84,39 @@
     <div class="grid-container">
         <div class="vp1 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp2 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp3 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp4 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp5 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp6 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp7 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp8 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
         <div class="vp9 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
         </div>
     </div>
 
@@ -181,6 +201,10 @@
                             playSound('notify.mp3', 0.25);
                             var span = document.querySelector(selector + ' > span.status');
                             span.innerHTML = 'MOTION'
+
+                            var span = document.querySelector(selector + ' > span.notify');
+                            span.innerHTML = 'This is my notifcation'
+                            
                         }
                         return
                     }
