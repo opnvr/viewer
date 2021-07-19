@@ -131,6 +131,22 @@
 
     (function () {
 
+        const lastMessage = new Map()
+        function checkLastMessage() {
+            lastMessage.forEach((value, key) => {
+                console.log(`Checking id ${key} @ ${value} (${Date.now() - value}ms)`)
+            })
+            setTimeout(() => {
+                checkLastMessage()
+                
+            }, 10000)
+        }
+        setTimeout(() => {
+            checkLastMessage()
+            
+        }, 10000)
+
+
         const decoder = new TextDecoder()
 
         const styleSheet = document.head.querySelector('style').sheet
@@ -311,6 +327,8 @@
                 const msgtype = o.slice(1, 2)[0]
                 // console.log('Header', { id, msgtype })
                 const data = o.slice(2)
+
+                lastMessage.set(id, Date.now())
 
                 if (data.length) {
                     buffers[id].handleData(msgtype, data)
