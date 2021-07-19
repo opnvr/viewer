@@ -83,6 +83,16 @@
             top: 7px;
         }
 
+        .box > span.stalled {
+            display: none;
+            content: url(warning.svg);
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            left: 25%;
+            top: 25%;
+        }
+
     </style>
 </head>
 
@@ -90,39 +100,39 @@
     <div class="grid-container">
         <div class="vp1 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp2 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp3 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp4 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp5 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp6 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp7 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp8 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
         <div class="vp9 box">
             <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span>
+            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
         </div>
     </div>
 
@@ -133,8 +143,11 @@
 
         const lastMessage = new Map()
         function checkLastMessage() {
-            lastMessage.forEach((value, key) => {
-                console.log(`Checking id ${key} @ ${value} (${Date.now() - value}ms)`)
+            lastMessage.forEach((value, id) => {
+                const sinceLastMessage = Date.now() - value
+                console.log(`Checking id ${id} @ ${value} (${sinceLastMessage}ms)`)
+                
+                buffers[id].showStalled(sinceLastMessage > 5000)
             })
             setTimeout(() => {
                 checkLastMessage()
@@ -212,6 +225,15 @@
             }, 5000)
 
             return {
+                showStalled: show => {
+                    var span = document.querySelector(selector + ' > span.stalled');
+                    if(show) {
+                        span.style.display = 'block'
+                    } else {
+                        span.style.display = 'none'
+                    }
+                },
+
                 handleData: (msgtype, data) => {
 
                     if(msgtype === 50) { // Motion start
@@ -357,7 +379,10 @@
 function playSound(file, volume) {
   const audio = new Audio(file);
   audio.volume = volume || 1
-  audio.play();
+  audio.play()
+    .catch(err => {
+        console.warn('Unable to play sound')
+    })
 }
     
 </script>
