@@ -124,7 +124,7 @@ function videoConsumer (camera) {
     .noAudio()
     .videoCodec('copy')
     .format('mp4')
-    .outputOptions('-movflags omit_tfhd_offset+frag_keyframe+default_base_moof')
+    .outputOptions('-movflags empty_moov+omit_tfhd_offset+frag_keyframe+default_base_moof')
     .on('error', function(err) {
         console.log('An error occurred: ' + err.message);
       })
