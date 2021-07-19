@@ -29,6 +29,12 @@ const MP4_MDAT = 1835295092;
 const headers = {
 }
 
+// Send reload message after restart
+setTimeout(() => {
+    console.log('Send reload message')
+    broadcast(5, 70, new Uint8Array(1))
+}, 10000)
+
 function binStringToHex2(s) {
     var s2 = new Array(s.length), c;
 
@@ -100,6 +106,7 @@ function sendFTYPMOOV (id, socket) {
 }
 
 function broadcast (id, type, data) {
+    console.log('Broadcast to', app.ws.server.clients.size)
     app.ws.server.clients.forEach(function each(client) {
         if (client.readyState === WebSocketOpen) {
             if (!client.sentHeaders.has(id)) {
@@ -112,6 +119,7 @@ function broadcast (id, type, data) {
 };
 
 function sendObject (socket, id, type, data) {
+    console.log('send object')
     var o = new Uint8Array(data.length + 2);
     o.set([id, type], 0)
     o.set(data, 2)

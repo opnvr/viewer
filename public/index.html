@@ -235,6 +235,7 @@
                 },
 
                 handleData: (msgtype, data) => {
+                    console.log('handleData', selector, msgtype)
 
                     if(msgtype === 50) { // Motion start
                         console.log(`Camera ${id} motion start`)
@@ -302,6 +303,11 @@
                         return
                     }
 
+                    if(msgtype === 70) {
+                        location.reload()
+                        return
+                    }
+
                     if(msgtype === 99) {
                         // ftyp_moov, reset sourceBuffer
                         buffer_index = 0;
@@ -352,6 +358,7 @@
 
                 lastMessage.set(id, Date.now())
 
+                console.log('Got data', { id, msgtype, length: data.length })
                 if (data.length) {
                     buffers[id].handleData(msgtype, data)
                 }
