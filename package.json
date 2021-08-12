@@ -1,33 +1,40 @@
 {
-  "name": "nvrviewer",
+  "name": "viewer",
   "version": "1.0.0",
-  "description": "NVR 3x3 cam viewer",
   "main": "index.js",
   "scripts": {
-    "docker:build": "docker build -t ghcr.io/timbailey-pnk/nvrviewer .",
-    "docker:push": "docker push ghcr.io/timbailey-pnk/nvrviewer"
+    "standard": "standard --fix",
+    "release": "standard-version",
+    "prepare": "husky install",
+    "docker:build": "docker build -t ghcr.io/opnvr/viewer .",
+    "docker:push": "docker push ghcr.io/opnvr/viewer"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/eventials/poc-mp4-websocket.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/eventials/poc-mp4-websocket/issues"
-  },
-  "homepage": "https://github.com/eventials/poc-mp4-websocket#readme",
+  "repository": "https://github.com/opnvr/viewer",
+  "author": "Tim Bailey <tim.bailey@bailey9.com>",
+  "license": "MIT",
   "dependencies": {
-    "big-integer": "^1.6.48",
-    "delimiter-stream": "^3.0.1",
-    "fluent-ffmpeg": "^2.1.2",
-    "http-server": "^0.12.3",
-    "koa": "^2.13.1",
-    "koa-static": "^5.0.0",
-    "koa-websocket": "^6.0.0",
-    "mqtt": "^4.2.6",
-    "needle": "^2.6.0",
-    "ws": "^7.4.2",
-    "xml2js": "^0.4.23"
+    "big-integer": "1.6.48",
+    "delimiter-stream": "3.0.1",
+    "fluent-ffmpeg": "2.1.2",
+    "joi": "17.4.2",
+    "loglevel": "1.7.1",
+    "loglevel-plugin-prefix": "0.8.4",
+    "luxon": "2.0.1",
+    "standard": "16.0.3",
+    "http-server": "0.12.3",
+    "koa": "2.13.1",
+    "koa-static": "5.0.0",
+    "koa-websocket": "6.0.0",
+    "mqtt": "4.2.8",
+    "needle": "2.8.0",
+    "yaml": "1.10.2",
+    "ws": "8.0.0",
+    "xml2js": "0.4.23"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "13.1.0",
+    "@commitlint/config-conventional": "13.1.0",
+    "husky": "7.0.1",
+    "standard-version": "9.3.1"
   }
 }
