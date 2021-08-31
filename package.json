@@ -13,7 +13,7 @@
   "author": "Tim Bailey <tim.bailey@bailey9.com>",
   "license": "MIT",
   "dependencies": {
-    "@koa/router": "^10.1.1",
+    "@koa/router": "10.1.1",
     "big-integer": "1.6.48",
     "delimiter-stream": "3.0.1",
     "fluent-ffmpeg": "2.1.2",
