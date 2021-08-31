@@ -1,6 +1,6 @@
-# recorder
+# viwer
 
-A nodejs application to consume your ipcamera video feeds and save to disk.
+A nodejs application to consume your ipcamera video feeds and display on a webpage, also overlaying motion, linecrossing and notification events.
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -30,17 +30,16 @@ A nodejs application to consume your ipcamera video feeds and save to disk.
 ## About
 Previously I was using a Hikvision NVR, but this was limited to outputing the video grid to either the VGA or HDMI outputs on the back of the unit.  There was a special "Channel Zero" which could stream the video grid but it was very low resolution.  I had a need to show this video grid at multiple locations around my house.
 
-The sister project to this recorder, [viewer](https://github.com/opnvr/viewer), suits my needs by allowing the video grid to be displayed on a webbrowser.  Tested on Chromium, Chrome & Firefox on linux, this viewer is currently running on Raspberry PI 4's connected to 3 televisions ar required around the house.
+This project is to allow the video grid to be displayed on a webbrowser.  Tested on Chromium, Chrome & Firefox on linux, this viewer is currently running on Raspberry PI 4's connected to 3 televisions ar required around the house.
 
-Now that the viewer has replaced the Hikvision nvr, I needed to also actually record the video, and as such this project was born.
+The sister project to this viewer, [recorder](https://github.com/opnvr/recorder), actually does the recording of the video sources.
 
 ## Features
 
 - Written in nodejs
 - No installation necessary - just use docker-compose.
-- Stupidly [easy to use](https://github.com/opnvr/recorder#usage)
+- Stupidly [easy to use](https://github.com/opnvr/viewer#usage)
 - Works on Mac, Linux and (maybe) Windows
-- Simple file retention mechanism, with plans for more sophisticated retentions.
 
 ## Installation
 
@@ -57,13 +56,12 @@ Create a docker-compose file similar to below.
 version: "3.8"
 services:
   nvrrecorder:
-    image: ghcr.io/opnvr/recorder:latest
-    container_name: nvrrecorder
+    image: ghcr.io/opnvr/viewer:latest
+    container_name: nvrviewer
     environment:
       - TZ=Australia/Sydney
     volumes:
       - /path/to/config.yaml:/var/app/config.yaml:ro
-      - /video:/video
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
@@ -84,7 +82,7 @@ The following sections exist in the config.yaml file
 | -------------------------- | ------------------ | --------------------------------------------------------------------------- |
 | sources                    | `[]`               | List of camera sources to be recorded                                       |
 | logging                    | `NULL`             | Logging configuration                                                       |
-| output                     | `/video`           | Root folder that the recorded video will be stored                          |
+| layout                     | `NULL`             | Mapping the video sources to the grid                                       |
 
 #### sources
 
@@ -116,19 +114,6 @@ The following sections exist in the config.yaml file
 | logging.level              | `warn`             | logging level                                                               |
 | logging.ffpmeg             | `warning`          | logging level for ffmpeg                                                    |
 
-#### output
-
-| Name                       | Default value      | Description                                                                 |
-| -------------------------- | ------------------ | --------------------------------------------------------------------------- |
-| output.rootFolder          | `/video`           | Root folder to save video files                                             |
-| output.retention           |                    | Retention pluging                                                           |
-
-#### output.retention[simple]
-
-| Name                       | Default value      | Description                                                                 |
-| -------------------------- | ------------------ | --------------------------------------------------------------------------- |
-| output.retention.type      | `simple`           | Simple Retention that removes video files older than duration               |
-| output.retention.duration  | `P1D` 1 day        | Retention duration in ISO 8601 duration format.                             |
 
 ### Example 
 config.yaml showing defaults
@@ -147,25 +132,26 @@ logging:
   level: warn
   ffmpeg: warning
 
-output:
-  rootFolder: '/video'
-  retention:
-    type: simple
-    duration: P5D
+layout:
+  type: 3x3
+  grid:
+    - [ 4, 3, 2 ]
+    - [ 5, 6, 7 ]
+    - [ 8, 9, 0 ]
 ```
 
 ## Contributing
 
 #### Bug Reports & Feature Requests
 
-Please use the [issue tracker](https://github.com/opnvr/recorder/issues) to report any bugs or file feature requests.
+Please use the [issue tracker](https://github.com/opnvr/viewer/issues) to report any bugs or file feature requests.
 
 #### Developing
 
 PRs are welcome. To begin developing, do this:
 
 ```bash
-$ git clone git@github.com:opnvr/recorder.git
+$ git clone git@github.com:opnvr/viewer.git
 $ cd recorder/
 $ node index.js
 ```
@@ -176,7 +162,7 @@ Licensed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 Tim Bailey - timb@bailey9.com
-Project Link: [https://github.com/opnvr/recorder](https://github.com/opnvr/recorder)
+Project Link: [https://github.com/opnvr/viewer](https://github.com/opnvr/viewer)
 
 ## Acknowledgements
 * Inspired by the proof of concept https://github.com/eventials/poc-mp4-websocket

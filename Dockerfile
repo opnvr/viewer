@@ -6,7 +6,7 @@ COPY --from=0 / /
 
 WORKDIR /var/app
 COPY package*.json yarn.lock ./
-RUN yarn install  --ignore-scripts
+RUN yarn install  --ignore-scripts --prod
 COPY . .
 EXPOSE 8000
 
