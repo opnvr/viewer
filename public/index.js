@@ -2,8 +2,15 @@
 /* eslint-env browser */
 
 const MSGTYPE = {
-  MOTION_START: 50
-}
+  MOTION_START: 50,
+  MOTION_END: 51,
+  LINECROSS_START: 52,
+  LINECROSS_END: 53,
+  NOTIFICATION: 60,
+  RELOAD: 70,
+  FTYP_MOOV: 99,
+  MP4_DATA: 100
+};
 
 (function () {
   setInterval(() => {
@@ -41,9 +48,9 @@ const MSGTYPE = {
     let motion = false
 
     // Pre alloc buffer due updating delay
-    const buffer_size = 5 * 1024 * 1024
-    let buffer_index = 0
-    let frag_mp4_buffer = new Uint8Array(buffer_size)
+    const bufferSize = 5 * 1024 * 1024
+    let bufferIndex = 0
+    let fragMp4Buffer = new Uint8Array(bufferSize)
     const video = document.querySelector(selector + ' > video')
     const mediaSource = new MediaSource()
 
@@ -55,8 +62,6 @@ const MSGTYPE = {
     video.playbackRate = 1.06
 
     mediaSource.addEventListener('sourceopen', function (e) {
-      // console.log('sourceopen: ' + mediaSource.readyState);
-
       buffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E"')
       buffer.mode = 'sequence'
     }, false)
@@ -74,16 +79,13 @@ const MSGTYPE = {
       if (video.seekable.length) {
         const seekableEnd = video.seekable.end(video.seekable.length - 1)
         if (seekableEnd - video.currentTime > 3) {
-          // console.log('Seek to end', seekableEnd- video.currentTime)
           video.currentTime = seekableEnd
         }
       }
 
-      // console.log('buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
       const bufferedLength = buffer.buffered.end(0) - buffer.buffered.start(0)
       if (!buffer.updating && bufferedLength > 60) {
         buffer.remove(buffer.buffered.start(0), buffer.buffered.start(0) + (bufferedLength / 2))
-        // console.log('...remove half of the buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
       }
     }, 5000)
 
@@ -116,7 +118,7 @@ const MSGTYPE = {
           return
         }
 
-        if (msgtype === 51) { // Motion end
+        if (msgtype === MSGTYPE.MOTION_END) { // Motion end
           console.log(`Camera ${id} motion end`)
           motion = false
           const span = document.querySelector(selector + ' > span.status')
@@ -124,7 +126,7 @@ const MSGTYPE = {
           return
         }
 
-        if (msgtype === 52) { // line cross start
+        if (msgtype === MSGTYPE.LINECROSS_START) { // line cross start
           console.log(`Camera ${id} line cross start`)
           if (!motion) {
             motion = true
@@ -140,7 +142,7 @@ const MSGTYPE = {
           return
         }
 
-        if (msgtype === 53) { // line cross end
+        if (msgtype === MSGTYPE.LINECROSS_END) { // line cross end
           console.log(`Camera ${id} line cross end`)
           motion = false
           const span = document.querySelector(selector + ' > span.linecross')
@@ -148,7 +150,7 @@ const MSGTYPE = {
           return
         }
 
-        if (msgtype === 60) { // Notification
+        if (msgtype === MSGTYPE.NOTIFICATION) { // Notification
           setTimeout(() => {
             const span = document.querySelector(selector + ' > span.notify')
             span.style.display = 'none'
@@ -166,31 +168,31 @@ const MSGTYPE = {
           return
         }
 
-        if (msgtype === 70) {
+        if (msgtype === MSGTYPE.RELOAD) {
           location.reload()
           return
         }
 
-        if (msgtype === 99) {
+        if (msgtype === MSGTYPE.FTYP_MOOV) {
           // ftyp_moov, reset sourceBuffer
-          buffer_index = 0
-          frag_mp4_buffer = new Uint8Array(buffer_size)
+          bufferIndex = 0
+          fragMp4Buffer = new Uint8Array(bufferSize)
           if (buffer) {
             buffer.abort()
           }
         }
 
-        if ((buffer_index + data.length) <= buffer_size) {
-          frag_mp4_buffer.set(data, buffer_index)
-          buffer_index = buffer_index + data.length
+        if ((bufferIndex + data.length) <= bufferSize) {
+          fragMp4Buffer.set(data, bufferIndex)
+          bufferIndex = bufferIndex + data.length
 
           if (!buffer.updating && mediaSource.readyState === 'open') {
-            const appended = frag_mp4_buffer.slice(0, buffer_index)
+            const appended = fragMp4Buffer.slice(0, bufferIndex)
 
             buffer.appendBuffer(appended)
 
-            frag_mp4_buffer.fill(0)
-            buffer_index = 0
+            fragMp4Buffer.fill(0)
+            bufferIndex = 0
           }
         }
       }
@@ -208,6 +210,11 @@ const MSGTYPE = {
     9: videoSource(9, '.vp8')
   }
 
+  fetch('/api/config')
+    .then(result => {
+      console.log('data', result)
+    })
+
   function connect () {
     const websocket = new WebSocket('ws://' + document.location.hostname + ':8000')
     websocket.binaryType = 'arraybuffer'
@@ -216,7 +223,6 @@ const MSGTYPE = {
       const o = new Uint8Array(e.data)
       const id = o.slice(0, 1)[0]
       const msgtype = o.slice(1, 2)[0]
-      // console.log('Header', { id, msgtype })
       const data = o.slice(2)
 
       lastMessage.set(id, Date.now())
@@ -251,6 +257,6 @@ function playSound (file, volume) {
   audio.volume = volume || 1
   audio.play()
     .catch(err => {
-      console.warn('Unable to play sound')
+      console.warn('Unable to play sound', err)
     })
 }

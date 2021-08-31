@@ -1,10 +1,11 @@
 const log = require('loglevel').getLogger('server')
 const Koa = require('koa')
+const Router = require('@koa/router')
 const websockify = require('koa-websocket')
 
 const WebSocketOpen = 1
 
-const factory = () => {
+const factory = (layoutConfig) => {
   log.debug('Create')
 
   const headers = {
@@ -14,6 +15,14 @@ const factory = () => {
 
   app.use(require('koa-static')('public'))
 
+  const router = new Router({
+    prefix: '/api'
+  })
+  router.get('/config', async ctx => {
+    ctx.body = layoutConfig
+  })
+
+  app.use(router.middleware())
   app.use(async ctx => {
     ctx.body = 'Hello World'
   })
