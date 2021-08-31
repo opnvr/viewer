@@ -18,13 +18,18 @@ const MSGTYPE = {
     span.innerHTML = luxon.DateTime.local().toFormat('HH:mm:ss')
   }, 1000)
 
+  const sources = new Map()
+
   const lastMessage = new Map()
   function checkLastMessage () {
     lastMessage.forEach((value, id) => {
       const sinceLastMessage = Date.now() - value
       console.log(`Checking id ${id} @ ${value} (${sinceLastMessage}ms)`)
 
-      buffers[id].showStalled(sinceLastMessage > 5000)
+      const source = sources.get(id)
+      if (source) {
+        source.showStalled(sinceLastMessage > 5000)
+      }
     })
     setTimeout(() => {
       checkLastMessage()
@@ -54,10 +59,6 @@ const MSGTYPE = {
     const video = document.querySelector(selector + ' > video')
     const mediaSource = new MediaSource()
 
-    // mediaSource.addEventListener('sourceended', function(e) { console.log('sourceended: ' + mediaSource.readyState); });
-    // mediaSource.addEventListener('sourceclose', function(e) { console.log('sourceclose: ' + mediaSource.readyState); });
-    // mediaSource.addEventListener('error', function(e) { console.log('error: ' + mediaSource.readyState); });
-
     video.src = window.URL.createObjectURL(mediaSource)
     video.playbackRate = 1.06
 
@@ -75,6 +76,7 @@ const MSGTYPE = {
         console.error('Failed', err)
       })
 
+    // Set interval to keep making sure video player is as close to the end ie realtime as possible
     setInterval(() => {
       if (video.seekable.length) {
         const seekableEnd = video.seekable.end(video.seekable.length - 1)
@@ -199,20 +201,32 @@ const MSGTYPE = {
     }
   }
 
-  const buffers = {
-    2: videoSource(2, '.vp1'),
-    3: videoSource(3, '.vp2'),
-    4: videoSource(4, '.vp3'),
-    5: videoSource(5, '.vp4'),
-    6: videoSource(6, '.vp5'),
-    7: videoSource(7, '.vp6'),
-    8: videoSource(8, '.vp7'),
-    9: videoSource(9, '.vp8')
+  function startVideoSource(postion, id) {
+    if (id > 0) {
+      sources.set(id, videoSource(id, '.vp' + postion))
+    }
   }
 
   fetch('/api/config')
     .then(result => {
       console.log('data', result)
+      return result.json()
+        .then(data => {
+          if (data.grid) {
+            console.log('grid', data.grid)
+            startVideoSource(1, data.grid[0][0])
+            startVideoSource(2, data.grid[0][1])
+            startVideoSource(3, data.grid[0][2])
+
+            startVideoSource(4, data.grid[1][0])
+            startVideoSource(5, data.grid[1][1])
+            startVideoSource(6, data.grid[1][2])
+
+            startVideoSource(7, data.grid[2][0])
+            startVideoSource(8, data.grid[2][1])
+            startVideoSource(9, data.grid[2][2])
+          }
+        })
     })
 
   function connect () {
@@ -229,7 +243,10 @@ const MSGTYPE = {
 
       console.log('Got data', { id, msgtype, length: data.length })
       if (data.length) {
-        buffers[id].handleData(msgtype, data)
+        const source = sources.get(id)
+        if (source) {
+          source.handleData(msgtype, data)
+        }
       }
     }, false)
 
