@@ -1,4 +1,4 @@
-# viwer
+# viewer
 
 A nodejs application to consume your ipcamera video feeds and display on a webpage, also overlaying motion, linecrossing and notification events.
 
@@ -107,6 +107,13 @@ The following sections exist in the config.yaml file
 | sources.authentication.user   | None               | Username                                                                    |
 | sources.authentication.pass   | None               | Password                                                                    |
 
+
+#### sources[*].notifications
+
+| Name                          | Default value      | Description                                                                 |
+| ----------------------------- | ------------------ | --------------------------------------------------------------------------- |
+| sources.notifications.type    | `kikvision`        | Hikvision motion & linecrossing notifications                               |
+
 #### logging
 
 | Name                       | Default value      | Description                                                                 |
@@ -114,19 +121,27 @@ The following sections exist in the config.yaml file
 | logging.level              | `warn`             | logging level                                                               |
 | logging.ffpmeg             | `warning`          | logging level for ffmpeg                                                    |
 
+#### layout
+TBA
+
+#### mqtt
+TBA
+
 
 ### Example 
 config.yaml showing defaults
 
 ```yaml
 sources:
-  - type: RTSP
-    id: Cam02
-    ipAddress: 192.168.1.202
+  - type: rtsp
+    id: 2
+    uri: rtsp://192.168.1.202/Streaming/Channels/102
     authentication:
       enable: true
       user: myuser
       pass: mypassword
+    notifications:
+      type: Hikvision
 
 logging:
   level: warn
@@ -135,9 +150,15 @@ logging:
 layout:
   type: 3x3
   grid:
-    - [ 4, 3, 2 ]
-    - [ 5, 6, 7 ]
-    - [ 8, 9, 0 ]
+    - [ 1, 0, 0 ]
+    - [ 0, 0, 0 ]
+    - [ 0, 0, 0 ]
+
+mqtt:
+  uri: tcp://192.168.1.53
+  authentication:
+    user: mqttuser
+    pass: mqttpassword
 ```
 
 ## Contributing
