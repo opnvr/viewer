@@ -1,7 +1,7 @@
 const log = require('loglevel').getLogger('mqtt')
 const mqtt = require('mqtt')
 
-const factory = (mqttConfig) => {
+const factory = (mqttConfig, server) => {
   return {
     start
   }
@@ -25,7 +25,7 @@ const factory = (mqttConfig) => {
       log.debug(topic, camera, message.toString())
 
       const data = new Uint8Array(message)
-      broadcast(camera, 60, data)
+      server.broadcast(camera, 60, data)
     })
   }
 }

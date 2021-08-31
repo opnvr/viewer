@@ -52,7 +52,7 @@ const factory = () => {
       if (data.indexOf('<EventNotificationAlert') > -1) {
         parser.parseString(data, (err, result) => {
           if (err) {
-            console.error('Failed', err)
+            log.error('Failed', err)
           }
           if (result) {
             if (result.EventNotificationAlert.eventState !== 'inactive' && result.EventNotificationAlert.eventType !== 'videoloss') {

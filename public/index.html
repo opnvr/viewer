@@ -2,418 +2,193 @@
 <html>
 
 <head>
-    <title>NVR Viewer</title>
-    <style>
-        body, html {
-            margin: 0;
-            height: 100%;
-            background-color: black;
-        }
+  <title>NVR Viewer</title>
+  <style>
+    body,
+    html {
+      margin: 0;
+      height: 100%;
+      background-color: black;
+    }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            gap: 0px 0px;
-            grid-template-areas:
-                "vp1 vp2 vp3"
-                "vp4 vp5 vp6"
-                "vp7 vp8 vp9";
-        }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 0px 0px;
+      grid-template-areas:
+        "vp1 vp2 vp3"
+        "vp4 vp5 vp6"
+        "vp7 vp8 vp9";
+    }
 
-        .vp1 { grid-area: vp1; }
-        .vp2 { grid-area: vp2; }
-        .vp3 { grid-area: vp3; }
-        .vp4 { grid-area: vp4; }
-        .vp5 { grid-area: vp5; }
-        .vp6 { grid-area: vp6; }
-        .vp7 { grid-area: vp7; }
-        .vp8 { grid-area: vp8; }
-        .vp9 { grid-area: vp9; }
+    .vp1 {
+      grid-area: vp1;
+    }
 
-        video {
-            object-fit: fill;
-            width: 100%;
-            height: 100%;
-        }
+    .vp2 {
+      grid-area: vp2;
+    }
 
-        .box {
-            position: relative;
-        }
+    .vp3 {
+      grid-area: vp3;
+    }
 
-        .box > span.status {
-            color: white;
-            position: absolute;
-            left: 5px;
-            bottom: 5px;
-            background-color: black;
-        }
+    .vp4 {
+      grid-area: vp4;
+    }
 
-        .box > span.linecross {
-            color: white;
-            position: absolute;
-            left: 75px;
-            bottom: 5px;
-            background-color: rgb(151, 41, 41);
-        }
+    .vp5 {
+      grid-area: vp5;
+    }
 
-        .box > span.notify {
-            display: none;
-            color: black;
-            position: absolute;
-            left: 0;
-            text-align: center;
-            line-height: 30px;
-            width: 100%;
-            bottom: 70px;
-            background-color: rgb(237, 181, 39);
-            opacity: 0.65;
-            font-weight: bold;
-        }
+    .vp6 {
+      grid-area: vp6;
+    }
 
-        .box > span.notify:before {
-            content: url(circle_notifications_black_24dp.svg);
-            /*content: url(data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm3.9-11.7L10 14.2l-1.9-1.9c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l2.6 2.6c.4.4 1 .4 1.4 0l6.6-6.6c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z"/></svg>);*/
-            display: inline-block;
-            height: 22px;
-            width: 22px;
-            position: relative;
+    .vp7 {
+      grid-area: vp7;
+    }
 
-            left: -2px;
-            top: 7px;
-        }
+    .vp8 {
+      grid-area: vp8;
+    }
 
-        .box > span.stalled {
-            display: none;
-            content: url(warning.svg);
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            left: 25%;
-            top: 25%;
-        }
+    .vp9 {
+      grid-area: vp9;
+    }
 
-        .infobar {
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: larger;
-            width: 100%;
-            line-height: 30px;
-        }
+    video {
+      object-fit: fill;
+      width: 100%;
+      height: 100%;
+    }
 
-        .infobar span {
-            text-align: center;
-            display: block;
-            height: 30px;
-        }
+    .box {
+      position: relative;
+    }
 
-    </style>
+    .box>span.status {
+      color: white;
+      position: absolute;
+      left: 5px;
+      bottom: 5px;
+      background-color: black;
+    }
+
+    .box>span.linecross {
+      color: white;
+      position: absolute;
+      left: 75px;
+      bottom: 5px;
+      background-color: rgb(151, 41, 41);
+    }
+
+    .box>span.notify {
+      display: none;
+      color: black;
+      position: absolute;
+      left: 0;
+      text-align: center;
+      line-height: 30px;
+      width: 100%;
+      bottom: 70px;
+      background-color: rgb(237, 181, 39);
+      opacity: 0.65;
+      font-weight: bold;
+    }
+
+    .box>span.notify:before {
+      content: url(mqtt.svg);
+      display: inline-block;
+      height: 22px;
+      width: 22px;
+      position: relative;
+
+      left: -2px;
+      top: 7px;
+    }
+
+    .box>span.stalled {
+      display: none;
+      content: url(warning.svg);
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      left: 25%;
+      top: 25%;
+    }
+
+    .infobar {
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: larger;
+      width: 100%;
+      line-height: 30px;
+    }
+
+    .infobar span {
+      text-align: center;
+      display: block;
+      height: 30px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="infobar">
-        <span class="clock"></span>
+  <div class="infobar">
+    <span class="clock"></span>
+  </div>
+  <div class="grid-container">
+    <div class="vp1 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
     </div>
-    <div class="grid-container">
-        <div class="vp1 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp2 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp3 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp4 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp5 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp6 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp7 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp8 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
-        <div class="vp9 box">
-            <video autoplay muted></video>
-            <span class="status"></span><span class="linecross"></span><span class="notify"></span><span class="stalled"></span>
-        </div>
+    <div class="vp2 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
     </div>
+    <div class="vp3 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+    <div class="vp4 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+    <div class="vp5 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+    <div class="vp6 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+    <div class="vp7 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+    <div class="vp8 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+    <div class="vp9 box">
+      <video autoplay muted></video>
+      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
+        class="stalled"></span>
+    </div>
+  </div>
 
-<script src="luxon.min.js"></script>
-<script type="text/javascript">
-
-    (function () {
-
-        setInterval(() => {
-            var span = document.querySelector('.infobar span.clock');
-            span.innerHTML = luxon.DateTime.local().toFormat('HH:mm:ss')
-        }, 1000)
-
-        const lastMessage = new Map()
-        function checkLastMessage() {
-            lastMessage.forEach((value, id) => {
-                const sinceLastMessage = Date.now() - value
-                console.log(`Checking id ${id} @ ${value} (${sinceLastMessage}ms)`)
-                
-                buffers[id].showStalled(sinceLastMessage > 5000)
-            })
-            setTimeout(() => {
-                checkLastMessage()
-                
-            }, 10000)
-        }
-        setTimeout(() => {
-            checkLastMessage()
-            
-        }, 10000)
-
-
-        const decoder = new TextDecoder()
-
-        const styleSheet = document.head.querySelector('style').sheet
-        let index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / 3}px; }`)
-        window.addEventListener('resize', () => {
-            styleSheet.deleteRule(index)
-            index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / 3}px; }`)
-        });
-
-        function videoSource (id, selector) {
-            var buffer;
-            var websocket;
-            let motion = false
-
-            // Pre alloc buffer due updating delay
-            var buffer_size = 5*1024*1024;
-            var buffer_index = 0;
-            var frag_mp4_buffer = new Uint8Array(buffer_size);
-            var video = document.querySelector(selector + ' > video');
-            var mediaSource = new MediaSource();
-
-            // mediaSource.addEventListener('sourceended', function(e) { console.log('sourceended: ' + mediaSource.readyState); });
-            // mediaSource.addEventListener('sourceclose', function(e) { console.log('sourceclose: ' + mediaSource.readyState); });
-            // mediaSource.addEventListener('error', function(e) { console.log('error: ' + mediaSource.readyState); });
-
-            video.src = window.URL.createObjectURL(mediaSource);
-            video.playbackRate = 1.06
-
-            mediaSource.addEventListener('sourceopen', function(e) {
-                // console.log('sourceopen: ' + mediaSource.readyState);
-
-                buffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E"');
-                buffer.mode = 'sequence'
-            }, false);
-
-            console.log('Play')
-            video.play()
-                .then(a => {
-                    console.log('Playing', a)
-                })
-                .catch(err => {
-                    console.error('Failed', err)
-                })
-
-
-            setInterval(() => {
-
-                if(video.seekable.length) {
-                    var seekableEnd = video.seekable.end(video.seekable.length - 1);
-                    if (seekableEnd - video.currentTime > 3) {
-                        // console.log('Seek to end', seekableEnd- video.currentTime)
-                        video.currentTime = seekableEnd
-                    }
-                }
-                
-                // console.log('buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
-                const bufferedLength = buffer.buffered.end(0) - buffer.buffered.start(0)
-                if(!buffer.updating && bufferedLength > 60) {
-                    buffer.remove(buffer.buffered.start(0), buffer.buffered.start(0) + (bufferedLength / 2))
-                    // console.log('...remove half of the buffer', { start: buffer.buffered.start(0), end: buffer.buffered.end(0), len: buffer.buffered.end(0) - buffer.buffered.start(0) })
-                }
-                
-            }, 5000)
-
-            return {
-                showStalled: show => {
-                    var span = document.querySelector(selector + ' > span.stalled');
-                    if(show) {
-                        span.style.display = 'block'
-                    } else {
-                        span.style.display = 'none'
-                    }
-                },
-
-                handleData: (msgtype, data) => {
-                    console.log('handleData', selector, msgtype)
-
-                    if(msgtype === 50) { // Motion start
-                        console.log(`Camera ${id} motion start`)
-                        if(!motion) {
-                            motion = true
-                            setTimeout(() => {
-                                var span = document.querySelector(selector + ' > span.status');
-                                span.innerHTML = ''
-                                motion = false
-                            }, 10000)
-                            playSound('notify.mp3', 0.25);
-                            var span = document.querySelector(selector + ' > span.status');
-                            span.innerHTML = 'MOTION'
-                        }
-                        return
-                    }
-
-                    if(msgtype === 51) { // Motion end
-                        console.log(`Camera ${id} motion end`)
-                        motion = false
-                        var span = document.querySelector(selector + ' > span.status');
-                        span.innerHTML = ''
-                        return
-                    }
-
-                    if(msgtype === 52) { // line cross start
-                        console.log(`Camera ${id} line cross start`)
-                        if(!motion) {
-                            motion = true
-                            setTimeout(() => {
-                                var span = document.querySelector(selector + ' > span.linecross');
-                                span.innerHTML = ''
-                                motion = false
-                            }, 10000)
-                            playSound('linecross.mp3');
-                            var span = document.querySelector(selector + ' > span.linecross');
-                            span.innerHTML = 'LINE'
-                        }
-                        return
-                    }
-
-                    if(msgtype === 53) { // line cross end
-                        console.log(`Camera ${id} line cross end`)
-                        motion = false
-                        var span = document.querySelector(selector + ' > span.linecross');
-                        span.innerHTML = ''
-                        return
-                    }
-
-                    if(msgtype === 60) { // Notification
-                        setTimeout(() => {
-                            var span = document.querySelector(selector + ' > span.notify');
-                            span.style.display = 'none'
-                        }, 10000)
-                        var span = document.querySelector(selector + ' > span.notify');
-
-                        const payload = JSON.parse(decoder.decode(data))
-
-                        span.innerHTML = payload.message
-                        span.style.display = 'block'
-
-                        console.log(payload)
-                        playSound('bell.mp3');
-
-                        return
-                    }
-
-                    if(msgtype === 70) {
-                        location.reload()
-                        return
-                    }
-
-                    if(msgtype === 99) {
-                        // ftyp_moov, reset sourceBuffer
-                        buffer_index = 0;
-                        frag_mp4_buffer = new Uint8Array(buffer_size);
-                        if (buffer) {
-                          buffer.abort()
-                        }
-                    }
-
-                    if((buffer_index + data.length) <= buffer_size){
-                        frag_mp4_buffer.set(data, buffer_index);
-                        buffer_index = buffer_index + data.length;
-
-                        if (!buffer.updating && mediaSource.readyState == 'open') {
-                            var appended = frag_mp4_buffer.slice(0, buffer_index);
-
-                            buffer.appendBuffer(appended);
-
-                            frag_mp4_buffer.fill(0);
-                            buffer_index = 0;
-                        }
-                    }
-                }
-            }
-        }
-
-        const buffers = {
-            2: videoSource(2, '.vp1'),
-            3: videoSource(3, '.vp2'),
-            4: videoSource(4, '.vp3'),
-            5: videoSource(5, '.vp4'),
-            6: videoSource(6, '.vp5'),
-            7: videoSource(7, '.vp6'),
-            8: videoSource(8, '.vp7'),
-            9: videoSource(9, '.vp8')
-        }
-
-        function connect() {
-            var websocket = new WebSocket('ws://' + document.location.hostname +':8000');
-            websocket.binaryType = 'arraybuffer';
-            
-            websocket.addEventListener('message', function(e) {
-                var o = new Uint8Array(e.data);
-                const id = o.slice(0, 1)[0]
-                const msgtype = o.slice(1, 2)[0]
-                // console.log('Header', { id, msgtype })
-                const data = o.slice(2)
-
-                lastMessage.set(id, Date.now())
-
-                console.log('Got data', { id, msgtype, length: data.length })
-                if (data.length) {
-                    buffers[id].handleData(msgtype, data)
-                }
-            }, false);
-
-            websocket.addEventListener('open', function (event) {
-                console.log('WS Connected!')
-            })
-
-            websocket.addEventListener('close', function(e) {
-                console.log('WS Disconnected!, retry in 5 secs')
-                setTimeout(() => connect(), 5000)
-            })
-        }
-
-        connect()
-        
-        // reload page every night
-        const today = new Date();
-        const tommorow = new Date(today.getFullYear(),today.getMonth(),today.getDate()+1);
-        const timeToMidnight = tommorow-today;
-        setTimeout(() => location.reload(), timeToMidnight);
-    })();
-
-function playSound(file, volume) {
-  const audio = new Audio(file);
-  audio.volume = volume || 1
-  audio.play()
-    .catch(err => {
-        console.warn('Unable to play sound')
-    })
-}
-    
-</script>
+  <script src="luxon.min.js"></script>
+  <script src="index.js"></script>
 </body>
+
 </html>
