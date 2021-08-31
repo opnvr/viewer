@@ -201,7 +201,7 @@ const MSGTYPE = {
     }
   }
 
-  function startVideoSource(postion, id) {
+  function startVideoSource (postion, id) {
     if (id > 0) {
       sources.set(id, videoSource(id, '.vp' + postion))
     }

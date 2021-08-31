@@ -33,5 +33,5 @@ config.sources.forEach(source => {
   notifications.start(config, source, source.notifications, server)
 })
 
-const mqtt = require('./mqtt')(config.mqtt)
+const mqtt = require('./mqtt')(config.mqtt, server)
 mqtt.start()

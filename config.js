@@ -17,6 +17,14 @@ const schema = joi.object({
   layout: joi.object({
     type: joi.string().lowercase().allow('3x3').required(),
     grid: joi.array().items(joi.array().items(joi.number().integer().min(0).max(255).required()))
+  }),
+  mqtt: joi.object({
+    uri: joi.string().uri().required(),
+    authentication: joi.object({
+      enable: joi.boolean().default(true),
+      user: joi.string().required(),
+      pass: joi.string().required()
+    })
   })
 }).required()
 

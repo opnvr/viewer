@@ -2,15 +2,24 @@ const log = require('loglevel').getLogger('mqtt')
 const mqtt = require('mqtt')
 
 const factory = (mqttConfig, server) => {
+  log.info('Create')
+
   return {
     start
   }
 
   function start () {
     // Listen for notifications
-    const client = mqtt.connect('tcp://192.168.1.53', { username: 'iot', password: 'w4kz7nB6ACw5rp' })
+    const options = {}
+    if (mqttConfig.authentication && mqttConfig.authentication.enable) {
+      options.username = mqttConfig.authentication.user
+      options.password = mqttConfig.authentication.pass
+    }
+    const client = mqtt.connect(mqttConfig.uri, options)
 
     client.on('connect', function () {
+      log.info('Connected')
+
       client.subscribe('notify/cam/+', err => {
         if (err) {
           log.error('Failed to subscribe to notify/cam/+', err)
