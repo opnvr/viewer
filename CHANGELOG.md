@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/opnvr/viewer/compare/v1.1.0...v1.2.0) (2021-08-31)
+
+
+### Features
+
+* update to latest deps ([a488678](https://github.com/opnvr/viewer/commit/a488678751c9fcd701e23990583770a0b61d5fc9))
+
 ## 1.1.0 (2021-08-31)
 
 
