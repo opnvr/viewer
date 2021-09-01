@@ -160,6 +160,31 @@ mqtt:
     user: mqttuser
     pass: mqttpassword
 ```
+## Running
+
+Visit the website at the docker-compose machine address port 8000 ie http://192.168.1.53:8000/
+
+![alt-text-1](Screenshot.png "screenshot")
+
+### Known working
+The viewer has been tested on the following OS/Browsers
+Ubuntu 21.x Chrome >= v92.0 
+ubuntu 21.x Firefox >= 91.0
+Raspbian 10.x Chromium >= 88.0.4324.187
+
+The following cameras are confirmed working as rtsp sources, most cameras will support RTSP feeds
+* Hikvision DS-2CD2343G0-I V5.6.2 build 190701
+* Hikvision DS-2CD2142FWD-I V5.5.53 build 180730
+* Hikvision DS-2CD2142FWD-IS V5.5.82 build 190220
+* Hikvision DS-2CD2342WD-I V5.4.5 build 170124
+* Hikvision DS-2CD2365G1-I V5.6.2 build 190701
+
+The following cameras are confirmed working for Hikvision notifications
+* Hikvision DS-2CD2343G0-I V5.6.2 build 190701
+* Hikvision DS-2CD2142FWD-I V5.5.53 build 180730
+* Hikvision DS-2CD2142FWD-IS V5.5.82 build 190220
+* Hikvision DS-2CD2342WD-I V5.4.5 build 170124
+* Hikvision DS-2CD2365G1-I V5.6.2 build 190701
 
 ## Contributing
 
@@ -173,7 +198,7 @@ PRs are welcome. To begin developing, do this:
 
 ```bash
 $ git clone git@github.com:opnvr/viewer.git
-$ cd recorder/
+$ cd viewer/
 $ node index.js
 ```
 
