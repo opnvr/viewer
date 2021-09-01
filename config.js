@@ -9,7 +9,7 @@ const schema = joi.object({
     notifications: joi.object({
       type: joi.string().lowercase().allow('hikvision').required()
     }).unknown(true)
-  }).unknown(true)),
+  }).unknown(true)).default([]),
   logging: joi.object({
     level: joi.string().allow('trace', 'debug', 'info', 'warn', 'error', 'silent').default('warn'),
     ffmpeg: joi.string().allow('quiet', 'panic', 'fatal', 'error', 'warning', 'info', 'verbose', 'debug', 'trace').default('warning')
@@ -32,7 +32,8 @@ const fs = require('fs')
 const YAML = require('yaml')
 
 const file = fs.readFileSync('config.yaml', 'utf8')
-const { value: config, error } = schema.validate(YAML.parse(file), { abortEarly: false })
+const parsed = YAML.parse(file) || {}
+const { value: config, error } = schema.validate(parsed, { abortEarly: false })
 if (error) {
   throw new Error('Invalid configuration, ' + error.message)
 }
