@@ -17,25 +17,25 @@
     "big-integer": "1.6.48",
     "delimiter-stream": "3.0.1",
     "fluent-ffmpeg": "2.1.2",
-    "http-server": "0.12.3",
+    "http-server": "13.0.1",
     "joi": "17.4.2",
     "koa": "2.13.1",
     "koa-static": "5.0.0",
     "koa-websocket": "6.0.0",
     "loglevel": "1.7.1",
     "loglevel-plugin-prefix": "0.8.4",
-    "luxon": "2.0.1",
+    "luxon": "2.0.2",
     "mqtt": "4.2.8",
-    "needle": "2.8.0",
+    "needle": "3.0.0",
     "standard": "16.0.3",
-    "ws": "8.0.0",
+    "ws": "8.2.1",
     "xml2js": "0.4.23",
     "yaml": "1.10.2"
   },
   "devDependencies": {
     "@commitlint/cli": "13.1.0",
     "@commitlint/config-conventional": "13.1.0",
-    "husky": "7.0.1",
+    "husky": "7.0.2",
     "standard-version": "9.3.1"
   }
 }
