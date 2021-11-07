@@ -6,6 +6,7 @@ const factory = () => {
   // Register notification type handlers
   const handlers = new Map()
   handlers.set('hikvision', require('./hikvision'))
+  handlers.set('none', require('./none'))
 
   return {
     start
