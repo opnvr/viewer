@@ -55,7 +55,7 @@ Create a docker-compose file similar to below.
 ```yaml
 version: "3.8"
 services:
-  nvrrecorder:
+  nvrrviewer:
     image: ghcr.io/opnvr/viewer:latest
     container_name: nvrviewer
     environment:
@@ -64,6 +64,8 @@ services:
       - /path/to/config.yaml:/var/app/config.yaml:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 8000:8000
     restart: unless-stopped
     logging:
       driver: "json-file"
