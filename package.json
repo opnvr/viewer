@@ -14,29 +14,29 @@
   "license": "MIT",
   "dependencies": {
     "@koa/router": "10.1.1",
-    "big-integer": "1.6.48",
+    "big-integer": "1.6.51",
     "delimiter-stream": "3.0.1",
     "fluent-ffmpeg": "2.1.2",
-    "http-server": "13.0.1",
+    "http-server": "14.0.0",
     "joi": "17.4.2",
-    "koa": "2.13.1",
+    "koa": "2.13.4",
     "koa-send": "5.0.1",
     "koa-static": "5.0.0",
     "koa-websocket": "6.0.0",
-    "loglevel": "1.7.1",
+    "loglevel": "1.8.0",
     "loglevel-plugin-prefix": "0.8.4",
-    "luxon": "2.0.2",
+    "luxon": "2.1.1",
     "mqtt": "4.2.8",
     "needle": "3.0.0",
-    "standard": "16.0.3",
-    "ws": "8.2.1",
+    "standard": "16.0.4",
+    "ws": "8.2.3",
     "xml2js": "0.4.23",
     "yaml": "1.10.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "13.1.0",
-    "@commitlint/config-conventional": "13.1.0",
-    "husky": "7.0.2",
-    "standard-version": "9.3.1"
+    "@commitlint/cli": "15.0.0",
+    "@commitlint/config-conventional": "15.0.0",
+    "husky": "7.0.4",
+    "standard-version": "9.3.2"
   }
 }
