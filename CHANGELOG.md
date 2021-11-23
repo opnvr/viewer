@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/opnvr/viewer/compare/v1.2.0...v1.4.0) (2021-11-23)
+
+
+### Features
+
+* add config for mqtt ([c2234d3](https://github.com/opnvr/viewer/commit/c2234d3f967f429a9b33d17c82adce5113da6d8c))
+* add defaults and skip mqtt if not configured ([272f5ed](https://github.com/opnvr/viewer/commit/272f5ed3087762d9a98b1cf5ec318d0b878415d4))
+* add support for 2x2 layout ([8fcc1ed](https://github.com/opnvr/viewer/commit/8fcc1edd4cc2a22e23aeec89f3606835704aabfd))
+* create new "none" notification manager ([2b711b7](https://github.com/opnvr/viewer/commit/2b711b743a94709f21be6022f7349254e232b476))
+* fix example docker-compose.  Missing ports and incorrect service name ([d41b489](https://github.com/opnvr/viewer/commit/d41b489d1fe50a04ab4e0ef7a56accc8d345803f))
+* readme.md improvements ([72f5db0](https://github.com/opnvr/viewer/commit/72f5db0afc8afb063179b369d588229cc49bdba3))
+* update readme ([0d088d1](https://github.com/opnvr/viewer/commit/0d088d194d70fb08d7ea614138a940cb69070b7c))
+
 ## 1.3.0 (2021-09-01)
 
 
