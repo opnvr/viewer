@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/opnvr/viewer/compare/v1.5.0...v1.6.0) (2021-11-23)
+
+
+### Features
+
+* fix incorrect svg file ([aa438f0](https://github.com/opnvr/viewer/commit/aa438f0f7dff8dad152cec5ca7c5414eac68c66b))
+
 ## [1.5.0](https://github.com/opnvr/viewer/compare/v1.4.0...v1.5.0) (2021-11-23)
 
 
