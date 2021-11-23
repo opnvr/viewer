@@ -41,13 +41,6 @@ const MSGTYPE = {
 
   const decoder = new TextDecoder()
 
-  const styleSheet = document.head.querySelector('style').sheet
-  let index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / 3}px; }`)
-  window.addEventListener('resize', () => {
-    styleSheet.deleteRule(index)
-    index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / 3}px; }`)
-  })
-
   function videoSource (id, selector) {
     let buffer
     let motion = false
@@ -57,6 +50,9 @@ const MSGTYPE = {
     let bufferIndex = 0
     let fragMp4Buffer = new Uint8Array(bufferSize)
     const video = document.querySelector(selector + ' > video')
+    if (!video) {
+      return
+    }
     const mediaSource = new MediaSource()
 
     video.src = window.URL.createObjectURL(mediaSource)
@@ -85,9 +81,11 @@ const MSGTYPE = {
         }
       }
 
-      const bufferedLength = buffer.buffered.end(0) - buffer.buffered.start(0)
-      if (!buffer.updating && bufferedLength > 60) {
-        buffer.remove(buffer.buffered.start(0), buffer.buffered.start(0) + (bufferedLength / 2))
+      if (buffer && buffer.buffered && buffer.buffered.length) {
+        const bufferedLength = buffer.buffered.end(0) - buffer.buffered.start(0)
+        if (!buffer.updating && bufferedLength > 60) {
+          buffer.remove(buffer.buffered.start(0), buffer.buffered.start(0) + (bufferedLength / 2))
+        }
       }
     }, 5000)
 
@@ -188,7 +186,7 @@ const MSGTYPE = {
           fragMp4Buffer.set(data, bufferIndex)
           bufferIndex = bufferIndex + data.length
 
-          if (!buffer.updating && mediaSource.readyState === 'open') {
+          if (buffer && !buffer.updating && mediaSource.readyState === 'open') {
             const appended = fragMp4Buffer.slice(0, bufferIndex)
 
             buffer.appendBuffer(appended)
@@ -213,7 +211,25 @@ const MSGTYPE = {
       return result.json()
         .then(data => {
           if (data.grid) {
-            console.log('grid', data.grid)
+            console.log('grid', data)
+
+            let rows = 0
+            switch(data.type) {
+              case '2x2':
+                rows = 2
+                break
+              case '3x3':
+                rows = 3
+                break
+            }
+            console.log('rows', { rows, height: (window.innerHeight - 30) / rows })
+            const styleSheet = document.head.querySelector('style').sheet
+            let index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / rows}px; }`)
+            window.addEventListener('resize', () => {
+              styleSheet.deleteRule(index)
+              index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / rows}px; }`)
+            })
+
             startVideoSource(1, data.grid[0][0])
             startVideoSource(2, data.grid[0][1])
             startVideoSource(3, data.grid[0][2])

@@ -1,4 +1,5 @@
 const log = require('loglevel').getLogger('server')
+const send = require('koa-send')
 const Koa = require('koa')
 const Router = require('@koa/router')
 const websockify = require('koa-websocket')
@@ -24,7 +25,9 @@ const factory = (layoutConfig) => {
 
   app.use(router.middleware())
   app.use(async ctx => {
-    ctx.body = 'Hello World'
+
+    await send(ctx, `public/index-${layoutConfig.type}.html`);
+    // ctx.body = 'Unknown layout, please check your config'
   })
 
   app.ws.use(function (ctx, next) {

@@ -123,8 +123,27 @@ The following sections exist in the config.yaml file
 | logging.level              | `warn`             | logging level                                                               |
 | logging.ffpmeg             | `warning`          | logging level for ffmpeg                                                    |
 
+```yaml
+logging:
+  level: warn
+  ffmpeg: warning
+```
+
 #### layout
-TBA
+
+| Name                       | Default value      | Description                                                                 |
+| -------------------------- | ------------------ | --------------------------------------------------------------------------- |
+| layout.type                | None               | Screen layout, currently `2x2` or `3x3` layouts exist                       |
+| layout.grid                | None               | Array of Array if the ids to be displayed in the position                   |
+
+```yaml
+layout:
+  type: 3x3
+  grid:
+    - [ 2, 3, 4 ]
+    - [ 5, 6, 7 ]
+    - [ 8, 9, 1 ]
+```
 
 #### mqtt
 TBA
