@@ -93,6 +93,7 @@ const MSGTYPE = {
       showStalled: show => {
         const span = document.querySelector(selector + ' > span.stalled')
         if (show) {
+          console.log('showStalled')
           span.style.display = 'block'
         } else {
           span.style.display = 'none'
