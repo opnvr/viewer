@@ -218,9 +218,26 @@ const MSGTYPE = {
             switch(data.type) {
               case '2x2':
                 rows = 2
+                startVideoSource(1, data.grid[0][0])
+                startVideoSource(2, data.grid[0][1])
+
+                startVideoSource(3, data.grid[1][0])
+                startVideoSource(4, data.grid[1][1])
                 break
               case '3x3':
                 rows = 3
+
+                startVideoSource(1, data.grid[0][0])
+                startVideoSource(2, data.grid[0][1])
+                startVideoSource(3, data.grid[0][2])
+
+                startVideoSource(4, data.grid[1][0])
+                startVideoSource(5, data.grid[1][1])
+                startVideoSource(6, data.grid[1][2])
+
+                startVideoSource(7, data.grid[2][0])
+                startVideoSource(8, data.grid[2][1])
+                startVideoSource(9, data.grid[2][2])
                 break
             }
             console.log('rows', { rows, height: (window.innerHeight - 30) / rows })
@@ -231,17 +248,7 @@ const MSGTYPE = {
               index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / rows}px; }`)
             })
 
-            startVideoSource(1, data.grid[0][0])
-            startVideoSource(2, data.grid[0][1])
-            startVideoSource(3, data.grid[0][2])
 
-            startVideoSource(4, data.grid[1][0])
-            startVideoSource(5, data.grid[1][1])
-            startVideoSource(6, data.grid[1][2])
-
-            startVideoSource(7, data.grid[2][0])
-            startVideoSource(8, data.grid[2][1])
-            startVideoSource(9, data.grid[2][2])
           }
         })
     })
