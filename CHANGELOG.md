@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/opnvr/viewer/compare/v1.6.0...v1.7.0) (2022-08-19)
+
+
+### Features
+
+* fix missing video on 2x2 layout ([20e6756](https://github.com/opnvr/viewer/commit/20e6756d58de51af411b876584847a8b6910d7ba))
+
 ## [1.6.0](https://github.com/opnvr/viewer/compare/v1.5.0...v1.6.0) (2021-11-23)
 
 
