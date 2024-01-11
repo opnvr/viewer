@@ -215,9 +215,11 @@ const MSGTYPE = {
             console.log('grid', data)
 
             let rows = 0
+            let cols = 0
             switch(data.type) {
               case '2x2':
                 rows = 2
+                cols = 2
                 startVideoSource(1, data.grid[0][0])
                 startVideoSource(2, data.grid[0][1])
 
@@ -226,6 +228,7 @@ const MSGTYPE = {
                 break
               case '3x3':
                 rows = 3
+                cols = 3
 
                 startVideoSource(1, data.grid[0][0])
                 startVideoSource(2, data.grid[0][1])
@@ -240,15 +243,25 @@ const MSGTYPE = {
                 startVideoSource(9, data.grid[2][2])
                 break
             }
-            console.log('rows', { rows, height: (window.innerHeight - 30) / rows })
+
+            function computeRowHeight() {
+              const windowRatio = window.innerWidth / window.innerHeight
+
+              let rowHeight = (window.innerHeight - 35) / rows
+              if(windowRatio < 1) {
+                // Add extra 40% height
+                rowHeight = (window.innerWidth / cols) * windowRatio * 1.4
+              }
+              console.log('rows', { rows, rowHeight, windowRatio })
+              return rowHeight
+            }
+
             const styleSheet = document.head.querySelector('style').sheet
-            let index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / rows}px; }`)
+            let index = styleSheet.insertRule(`.box { height: ${computeRowHeight()}px; }`)
             window.addEventListener('resize', () => {
               styleSheet.deleteRule(index)
-              index = styleSheet.insertRule(`.box { height: ${(window.innerHeight - 30) / rows}px; }`)
+              index = styleSheet.insertRule(`.box { height: ${computeRowHeight()}px; }`)
             })
-
-
           }
         })
     })
