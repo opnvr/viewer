@@ -15,7 +15,7 @@ const schema = joi.object({
     ffmpeg: joi.string().allow('quiet', 'panic', 'fatal', 'error', 'warning', 'info', 'verbose', 'debug', 'trace').default('warning')
   }),
   layout: joi.object({
-    type: joi.string().lowercase().allow('3x3').required(),
+    type: joi.string().lowercase().allow('3x3', '2x2', '4x3').required(),
     grid: joi.array().items(joi.array().items(joi.number().integer().min(0).max(255).required()))
   }),
   mqtt: joi.object({

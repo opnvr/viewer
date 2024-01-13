@@ -242,6 +242,24 @@ const MSGTYPE = {
                 startVideoSource(8, data.grid[2][1])
                 startVideoSource(9, data.grid[2][2])
                 break
+              case '4x3':
+                rows = 3
+                cols = 4
+
+                startVideoSource(1, data.grid[0][0])
+                startVideoSource(2, data.grid[0][1])
+                startVideoSource(3, data.grid[0][2])
+                startVideoSource(4, data.grid[0][3])
+
+                startVideoSource(5, data.grid[1][0])
+                startVideoSource(6, data.grid[1][1])
+                startVideoSource(7, data.grid[1][2])
+                startVideoSource(8, data.grid[1][3])
+
+                startVideoSource(9, data.grid[2][0])
+                startVideoSource(10, data.grid[2][1])
+                startVideoSource(11, data.grid[2][2])
+                startVideoSource(12, data.grid[0][3])
             }
 
             function computeRowHeight() {
