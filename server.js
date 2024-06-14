@@ -6,7 +6,7 @@ const websockify = require('koa-websocket')
 
 const WebSocketOpen = 1
 
-const factory = (layoutConfig) => {
+const factory = (config) => {
   log.debug('Create')
 
   const headers = {
@@ -20,13 +20,19 @@ const factory = (layoutConfig) => {
     prefix: '/api'
   })
   router.get('/config', async ctx => {
-    ctx.body = layoutConfig
+    ctx.body = {
+      sources: config.sources.map(s => ({
+        id: s.id,
+        type: s.type,
+        uri: s.type === 'iframe' ? s.uri : undefined
+      })),
+      layout: config.layout
+    }
   })
 
   app.use(router.middleware())
   app.use(async ctx => {
-
-    await send(ctx, `public/index-${layoutConfig.type}.html`);
+    await send(ctx, `public/index-${config.layout.type}.html`)
     // ctx.body = 'Unknown layout, please check your config'
   })
 

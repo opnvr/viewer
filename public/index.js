@@ -27,7 +27,7 @@ const MSGTYPE = {
       console.log(`Checking id ${id} @ ${value} (${sinceLastMessage}ms)`)
 
       const source = sources.get(id)
-      if (source) {
+      if (source && source.showStalled) {
         source.showStalled(sinceLastMessage > 5000)
       }
     })
@@ -49,7 +49,17 @@ const MSGTYPE = {
     const bufferSize = 5 * 1024 * 1024
     let bufferIndex = 0
     let fragMp4Buffer = new Uint8Array(bufferSize)
-    const video = document.querySelector(selector + ' > video')
+    const vp = document.querySelector(selector)
+
+    if (!vp) {
+      return
+    }
+
+    const video = document.createElement('video')
+    video.setAttribute('autoplay', '')
+    video.setAttribute('muted', '')
+    vp.appendChild(video)
+
     if (!video) {
       return
     }
@@ -206,67 +216,123 @@ const MSGTYPE = {
     }
   }
 
+  function startiFrameSource (position, id, uri) {
+    const selector = '.vp' + position
+    const vp = document.querySelector(selector)
+
+    if (!vp) {
+      console.log('No vp found', position)
+      return
+    }
+
+    const iframe = document.createElement('iframe')
+    iframe.setAttribute('src', uri)
+    vp.appendChild(iframe)
+    console.log('Done')
+
+    sources.set(id, {
+      handleData: (msgType, data) => {
+        console.log('handleData iFrame', { msgType, data })
+
+        if (msgType === MSGTYPE.NOTIFICATION) { // Notification
+          setTimeout(() => {
+            const span = document.querySelector(selector + ' > span.notify')
+            span.style.display = 'none'
+          }, 10000)
+          const span = document.querySelector(selector + ' > span.notify')
+
+          const payload = JSON.parse(decoder.decode(data))
+
+          span.innerHTML = payload.message
+          span.style.display = 'block'
+
+          console.log(payload)
+          if (payload.type === 'alert') {
+            playSound('alert.mp3')
+          } else {
+            playSound('mqtt.mp3')
+          }
+        }
+      }
+    })
+  }
+
+  function startSource (sources, position, id) {
+    if (id > 0) {
+      const source = sources.find(s => s.id === id)
+      switch (source.type) {
+        case 'rtsp':
+          startVideoSource(position, id)
+          break
+        case 'iframe':
+          startiFrameSource(position, id, source.uri)
+          break
+      }
+    }
+  }
+
   fetch('/api/config')
     .then(result => {
-      console.log('data', result)
       return result.json()
         .then(data => {
-          if (data.grid) {
-            console.log('grid', data)
+          console.log('loaded config', data)
+
+          if (data.layout) {
+            console.log('layout', data.layout)
 
             let rows = 0
             let cols = 0
-            switch(data.type) {
+            switch (data.layout.type) {
               case '2x2':
                 rows = 2
                 cols = 2
-                startVideoSource(1, data.grid[0][0])
-                startVideoSource(2, data.grid[0][1])
+                startSource(data.sources, 1, data.layout.grid[0][0])
+                startSource(data.sources, 2, data.layout.grid[0][1])
 
-                startVideoSource(3, data.grid[1][0])
-                startVideoSource(4, data.grid[1][1])
+                startSource(data.sources, 3, data.layout.grid[1][0])
+                startSource(data.sources, 4, data.layout.grid[1][1])
                 break
               case '3x3':
                 rows = 3
                 cols = 3
 
-                startVideoSource(1, data.grid[0][0])
-                startVideoSource(2, data.grid[0][1])
-                startVideoSource(3, data.grid[0][2])
+                startSource(data.sources, 1, data.layout.grid[0][0])
+                startSource(data.sources, 2, data.layout.grid[0][1])
+                startSource(data.sources, 3, data.layout.grid[0][2])
 
-                startVideoSource(4, data.grid[1][0])
-                startVideoSource(5, data.grid[1][1])
-                startVideoSource(6, data.grid[1][2])
+                startSource(data.sources, 4, data.layout.grid[1][0])
+                startSource(data.sources, 5, data.layout.grid[1][1])
+                startSource(data.sources, 6, data.layout.grid[1][2])
 
-                startVideoSource(7, data.grid[2][0])
-                startVideoSource(8, data.grid[2][1])
-                startVideoSource(9, data.grid[2][2])
+                startSource(data.sources, 7, data.layout.grid[2][0])
+                startSource(data.sources, 8, data.layout.grid[2][1])
+                startSource(data.sources, 9, data.layout.grid[2][2])
                 break
               case '4x3':
                 rows = 3
                 cols = 4
 
-                startVideoSource(1, data.grid[0][0])
-                startVideoSource(2, data.grid[0][1])
-                startVideoSource(3, data.grid[0][2])
-                startVideoSource(4, data.grid[0][3])
+                startSource(data.sources, 1, data.layout.grid[0][0])
+                startSource(data.sources, 2, data.layout.grid[0][1])
+                startSource(data.sources, 3, data.layout.grid[0][2])
+                startSource(data.sources, 4, data.layout.grid[0][3])
 
-                startVideoSource(5, data.grid[1][0])
-                startVideoSource(6, data.grid[1][1])
-                startVideoSource(7, data.grid[1][2])
-                startVideoSource(8, data.grid[1][3])
+                startSource(data.sources, 5, data.layout.grid[1][0])
+                startSource(data.sources, 6, data.layout.grid[1][1])
+                startSource(data.sources, 7, data.layout.grid[1][2])
+                startSource(data.sources, 8, data.layout.grid[1][3])
 
-                startVideoSource(9, data.grid[2][0])
-                startVideoSource(10, data.grid[2][1])
-                startVideoSource(11, data.grid[2][2])
-                startVideoSource(12, data.grid[0][3])
+                startSource(data.sources, 9, data.layout.grid[2][0])
+                startSource(data.sources, 10, data.layout.grid[2][1])
+                startSource(data.sources, 11, data.layout.grid[2][2])
+                startSource(data.sources, 12, data.layout.grid[2][3])
             }
 
-            function computeRowHeight() {
+            function computeRowHeight () {
               const windowRatio = window.innerWidth / window.innerHeight
 
               let rowHeight = (window.innerHeight - 35) / rows
-              if(windowRatio < 1) {
+              if (windowRatio < 1) {
                 // Add extra 40% height
                 rowHeight = (window.innerWidth / cols) * windowRatio * 1.4
               }

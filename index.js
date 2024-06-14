@@ -17,7 +17,7 @@ prefix.apply(log, {
 const config = require('./config')
 log.info('Create')
 
-const server = require('./server')(config.layout)
+const server = require('./server')(config)
 server.start()
 
 // Send reload message after restart

@@ -6,6 +6,7 @@ const factory = () => {
   // Register source type handlers
   const handlers = new Map()
   handlers.set('rtsp', require('./rtsp'))
+  handlers.set('iframe', require('./iframe'))
 
   return {
     start
