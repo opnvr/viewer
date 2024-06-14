@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/opnvr/viewer/compare/v1.7.0...v1.8.0) (2024-06-14)
+
+
+### Features
+
+* add new 4x3 file ([74e6a24](https://github.com/opnvr/viewer/commit/74e6a24cab392729e97fe809e282ce6c563ce75a))
+* add new files ([bffd4ab](https://github.com/opnvr/viewer/commit/bffd4abdc71056d0c5132508a1af5b122741632c))
+* add support for vertical screens ([688259e](https://github.com/opnvr/viewer/commit/688259e2b0c146f955098eda9171b9310e089426))
+* added new iframe source ([7059099](https://github.com/opnvr/viewer/commit/70590991d34233d271c253a3597bedc7fb3a42f4))
+* support 4x3 ([2385027](https://github.com/opnvr/viewer/commit/238502783364e7a9d4ecfddbfaace77cc8fad0c5))
+
 ## [1.7.0](https://github.com/opnvr/viewer/compare/v1.6.0...v1.7.0) (2022-08-19)
 
 
