@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/opnvr/viewer/compare/v1.8.0...v1.9.0) (2024-06-18)
+
+
+### Features
+
+* add support for frigate mqtt messages and display of boxes ([4951929](https://github.com/opnvr/viewer/commit/495192903679978c4a65893130cc146d0aefaa67))
+
 ## [1.8.0](https://github.com/opnvr/viewer/compare/v1.7.0...v1.8.0) (2024-06-14)
 
 

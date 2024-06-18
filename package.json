@@ -1,6 +1,6 @@
 {
   "name": "viewer",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "main": "index.js",
   "scripts": {
     "standard": "standard --fix",
