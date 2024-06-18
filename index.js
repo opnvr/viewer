@@ -26,14 +26,19 @@ setTimeout(() => {
   server.broadcast(5, 70, new Uint8Array(1))
 }, 10000)
 
+let mqttClient
+if (config.mqtt) {
+  const mqtt = require('./mqtt')(config.mqtt, server)
+  mqttClient = mqtt.start()
+}
+
 const sources = require('./sources')()
 const notifications = require('./notifications')()
 config.sources.forEach(source => {
   sources.start(config, source, server)
-  notifications.start(config, source, source.notifications, server)
-})
 
-if (config.mqtt) {
-  const mqtt = require('./mqtt')(config.mqtt, server)
-  mqtt.start()
-}
+  log.info('Notifications', source.notifications)
+  source.notifications.forEach(notification => {
+    notifications.start(config, source, notification, server, mqttClient)
+  })
+})

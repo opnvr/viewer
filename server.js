@@ -78,6 +78,7 @@ const factory = (config) => {
 
   function broadcast (id, type, data) {
     log.debug('Broadcast to', app.ws.server.clients.size)
+
     app.ws.server.clients.forEach(function each (client) {
       if (client.readyState === WebSocketOpen) {
         if (!client.sentHeaders.has(id)) {

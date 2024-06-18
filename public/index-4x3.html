@@ -84,6 +84,7 @@
 
     .box {
       position: relative;
+      overflow: hidden;
     }
 
     .box>span.status {
@@ -137,6 +138,20 @@
       top: 25%;
     }
 
+    .box>span.object {
+      position: absolute;
+      border: red 3px solid;
+    }
+
+    .box>span.object label {
+      color: white;
+      background-color: red;
+      left: -3px;
+      position: relative;
+      top: -18px;
+      padding: 0 3px;
+    }
+
     .infobar {
       color: white;
       font-family: 'Courier New', Courier, monospace;
@@ -174,9 +189,10 @@
         class="stalled"></span>
     </div>
     <div class="vp4 box">
-
-      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
-        class="stalled"></span>
+      <span class="status"></span>
+      <span class="linecross"></span>
+      <span class="notify"></span>
+      <span class="stalled"></span>
     </div>
     <div class="vp5 box">
 
@@ -215,10 +231,12 @@
       <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
         class="stalled"></span>
     </div>
-    <div class="vp12 box">
 
-      <span class="status"></span><span class="linecross"></span><span class="notify"></span><span
-        class="stalled"></span>
+    <div class="vp12 box">
+      <span class="status"></span>
+      <span class="linecross"></span>
+      <span class="notify"></span>
+      <span class="stalled"></span>
     </div>
   </div>
 

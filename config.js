@@ -6,9 +6,9 @@ const joi = require('joi')
 const schema = joi.object({
   sources: joi.array().items(joi.object({
     type: joi.string().lowercase().allow('rtsp', 'iframe').required(),
-    notifications: joi.object({
-      type: joi.string().lowercase().allow('hikvision').required()
-    }).unknown(true)
+    notifications: joi.array().items(joi.object({
+      type: joi.string().lowercase().allow('hikvision', 'frigate').required()
+    }).unknown(true)).single().default([])
   }).unknown(true)).default([]),
   logging: joi.object({
     level: joi.string().allow('trace', 'debug', 'info', 'warn', 'error', 'silent').default('warn'),
@@ -33,6 +33,8 @@ const YAML = require('yaml')
 
 const file = fs.readFileSync('config.yaml', 'utf8')
 const parsed = YAML.parse(file) || {}
+
+rootLog.info('Raw', parsed)
 const { value: config, error } = schema.validate(parsed, { abortEarly: false })
 if (error) {
   throw new Error('Invalid configuration, ' + error.message)

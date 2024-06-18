@@ -7,6 +7,7 @@ const MSGTYPE = {
   LINECROSS_START: 52,
   LINECROSS_END: 53,
   NOTIFICATION: 60,
+  OBJECT: 61,
   RELOAD: 70,
   FTYP_MOOV: 99,
   MP4_DATA: 100
@@ -175,6 +176,37 @@ const MSGTYPE = {
 
           console.log(payload)
           playSound('mqtt.mp3')
+
+          return
+        }
+
+        if (msgtype === MSGTYPE.OBJECT) {
+          const payload = JSON.parse(decoder.decode(data))
+
+          console.log('OBJECT', payload)
+          // Find the span with the id & delete
+          // Add a new span
+          // Translate box 640x360
+
+          const widthRatio = vp.clientWidth / 640
+          const heightRatio = vp.clientHeight / 360
+
+          const existingSpan = document.getElementById(payload.id);
+          if(existingSpan) {
+            existingSpan.remove();
+          }
+
+          if(!payload.endTime) {
+            const objectSpan = document.createElement('span')
+            const labelSpan = document.createElement('label')
+            labelSpan.innerText = payload.label;
+            objectSpan.appendChild(labelSpan);
+            objectSpan.setAttribute('id', payload.id)
+            objectSpan.setAttribute('class', 'object')
+            const [x1, y1, x2, y2] = payload.box
+            objectSpan.setAttribute('style', `left: ${Math.trunc(x1 * widthRatio)}px; top: ${Math.trunc(y1 * heightRatio)}px; width: ${Math.trunc((x2-x1) * widthRatio)}px; height: ${Math.trunc((y2-y1)*heightRatio)}px`)
+            vp.appendChild(objectSpan)
+          }
 
           return
         }
@@ -362,7 +394,7 @@ const MSGTYPE = {
 
       lastMessage.set(id, Date.now())
 
-      console.log('Got data', { id, msgtype, length: data.length })
+      console.log('Got data ' + msgtype, { id, msgtype, length: data.length })
       if (data.length) {
         const source = sources.get(id)
         if (source) {

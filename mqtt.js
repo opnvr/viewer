@@ -4,6 +4,8 @@ const mqtt = require('mqtt')
 const factory = (mqttConfig, server) => {
   log.info('Create')
 
+  const decoder = new TextDecoder()
+
   return {
     start
   }
@@ -30,12 +32,17 @@ const factory = (mqttConfig, server) => {
     })
 
     client.on('message', (topic, message) => {
-      const camera = topic.replace('notify/cam/', '')
-      log.debug(topic, camera, message.toString())
+      log.info('Topic', topic)
+      if (topic.includes('notify/cam')) {
+        const camera = topic.replace('notify/cam/', '')
+        log.debug(topic, camera, message.toString())
 
-      const data = new Uint8Array(message)
-      server.broadcast(camera, 60, data)
+        const data = new Uint8Array(message)
+        server.broadcast(camera, 60, data)
+      }
     })
+
+    return client
   }
 }
 
