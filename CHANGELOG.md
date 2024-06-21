@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/opnvr/viewer/compare/v1.9.0...v1.10.0) (2024-06-21)
+
+
+### Features
+
+* added timeout to clear orphaned object boxes ([a05e551](https://github.com/opnvr/viewer/commit/a05e551819205a006956e6fcfb2ab22750cbe969))
+* convert to npm from yarn ([faf3ed2](https://github.com/opnvr/viewer/commit/faf3ed230d6120a42ffa909981fecfb9269e59fd))
+
 ## [1.9.0](https://github.com/opnvr/viewer/compare/v1.8.0...v1.9.0) (2024-06-18)
 
 
