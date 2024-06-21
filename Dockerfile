@@ -5,8 +5,8 @@ FROM node:12-alpine
 COPY --from=0 / /
 
 WORKDIR /var/app
-COPY package*.json yarn.lock ./
-RUN yarn install  --ignore-scripts --prod
+COPY package*.json ./
+RUN npm install --ignore-scripts --prod
 COPY . .
 EXPOSE 8000
 
