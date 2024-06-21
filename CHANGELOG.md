@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/opnvr/viewer/compare/v1.10.0...v1.11.0) (2024-06-21)
+
+
+### Features
+
+* move Node to v20 ([d47f57a](https://github.com/opnvr/viewer/commit/d47f57a6bd3c14b34963b1e4003b60ac97d33435))
+
 ## [1.10.0](https://github.com/opnvr/viewer/compare/v1.9.0...v1.10.0) (2024-06-21)
 
 
