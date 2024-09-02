@@ -59,8 +59,11 @@ const factory = (config, sourceConfig, server) => {
       .on("error", function (err) {
         log.error("An error occurred: " + err.message);
       })
-      .on("end", function () {
-        log.info("Processing finished !");
+      .on("stderr", function (stderrLine) {
+        log.error("Stderr output: " + stderrLine);
+      })
+      .on("end", function (stdout, stderr) {
+        log.info(`End: ${stdout} ${stderr}`);
       });
 
     const ffstream = command.pipe();
