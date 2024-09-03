@@ -60,10 +60,13 @@ const factory = (config, sourceConfig, server) => {
         log.error("An error occurred: " + err.message);
       })
       .on("stderr", function (stderrLine) {
-        log.error("Stderr output: " + stderrLine);
+        //log.error("Stderr output: " + stderrLine);
       })
       .on("end", function (stdout, stderr) {
         log.info(`End: ${stdout} ${stderr}`);
+        log.warn("RESTARTING ffmpeg");
+        moovAtom = undefined;
+        start();
       });
 
     const ffstream = command.pipe();
