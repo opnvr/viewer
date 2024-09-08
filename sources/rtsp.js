@@ -45,7 +45,7 @@ const factory = (config, sourceConfig, server) => {
       camUrl.password = rtspConfig.authentication.pass;
     }
 
-    log.debug("Camera Uri", camUrl.href);
+    log.info("Starting camera uri", camUrl.href);
 
     const command = ffmpeg()
       .addOption(`-loglevel ${config.logging.ffmpeg}`)
@@ -56,6 +56,14 @@ const factory = (config, sourceConfig, server) => {
       .outputOptions(
         "-movflags empty_moov+omit_tfhd_offset+frag_keyframe+default_base_moof",
       )
+      .on("start", function (commandLine) {
+        log.info("Spawned Ffmpeg with command: " + commandLine);
+      })
+      .on("codecData", function (data) {
+        log.info(
+          "Input is " + data.audio + " audio with " + data.video + " video",
+        );
+      })
       .on("error", function (err) {
         log.error("An error occurred: " + err.message);
       })
