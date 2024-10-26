@@ -371,6 +371,19 @@ const MSGTYPE = {
             startSource(data.sources, 3, data.layout.grid[1][0]);
             startSource(data.sources, 4, data.layout.grid[1][1]);
             break;
+          case "3x2":
+            rows = 2;
+            cols = 3;
+
+            startSource(data.sources, 1, data.layout.grid[0][0]);
+            startSource(data.sources, 2, data.layout.grid[0][1]);
+            startSource(data.sources, 3, data.layout.grid[0][2]);
+            startSource(data.sources, 4, data.layout.grid[1][0]);
+            startSource(data.sources, 5, data.layout.grid[1][1]);
+            startSource(data.sources, 6, data.layout.grid[1][2]);
+
+
+            break;
           case "3x3":
             rows = 3;
             cols = 3;
