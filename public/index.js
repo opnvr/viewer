@@ -226,6 +226,21 @@ const MSGTYPE = {
                 startVideoSource(3, data.grid[1][0])
                 startVideoSource(4, data.grid[1][1])
                 break
+
+              case '3x2':
+                rows = 2
+                cols = 3
+
+                startVideoSource(1, data.grid[0][0])
+                startVideoSource(2, data.grid[0][1])
+                startVideoSource(3, data.grid[0][2])
+
+                startVideoSource(4, data.grid[1][0])
+                startVideoSource(5, data.grid[1][1])
+                startVideoSource(6, data.grid[1][2])
+
+                break
+
               case '3x3':
                 rows = 3
                 cols = 3

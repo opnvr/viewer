@@ -6,8 +6,8 @@
     "standard": "standard --fix",
     "release": "standard-version",
     "prepare": "husky install",
-    "docker:build": "docker build -t ghcr.io/opnvr/viewer .",
-    "docker:push": "docker push ghcr.io/opnvr/viewer"
+    "docker:build": "docker build -t ghcr.io/opnvr/viewer:timbo .",
+    "docker:push": "docker push ghcr.io/opnvr/viewer:timbo"
   },
   "repository": "https://github.com/opnvr/viewer",
   "author": "Tim Bailey <tim.bailey@bailey9.com>",
