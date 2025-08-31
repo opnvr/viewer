@@ -400,6 +400,26 @@ const MSGTYPE = {
             startSource(data.sources, 8, data.layout.grid[2][1]);
             startSource(data.sources, 9, data.layout.grid[2][2]);
             break;
+          case "3x4":
+            rows = 4;
+            cols = 3;
+
+            startSource(data.sources, 1, data.layout.grid[0][0]);
+            startSource(data.sources, 2, data.layout.grid[0][1]);
+            startSource(data.sources, 3, data.layout.grid[0][2]);
+
+            startSource(data.sources, 4, data.layout.grid[1][0]);
+            startSource(data.sources, 5, data.layout.grid[1][1]);
+            startSource(data.sources, 6, data.layout.grid[1][2]);
+
+            startSource(data.sources, 7, data.layout.grid[2][0]);
+            startSource(data.sources, 8, data.layout.grid[2][1]);
+            startSource(data.sources, 9, data.layout.grid[2][2]);
+
+            startSource(data.sources, 10, data.layout.grid[3][0]);
+            startSource(data.sources, 11, data.layout.grid[3][1]);
+            startSource(data.sources, 12, data.layout.grid[3][2]);
+            break;
           case "4x3":
             rows = 3;
             cols = 4;
@@ -428,7 +448,7 @@ const MSGTYPE = {
             // Add extra 40% height
             rowHeight = (window.innerWidth / cols) * windowRatio * 1.4;
           }
-          console.log("rows", { rows, rowHeight, windowRatio });
+          console.log("rows", { rows, cols, rowHeight, windowRatio });
           return rowHeight;
         }
 
