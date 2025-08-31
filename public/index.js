@@ -468,7 +468,7 @@ const MSGTYPE = {
 
   function connect() {
     const websocket = new WebSocket(
-      "ws://" + document.location.hostname + ":8000",
+      "ws://" + document.location.hostname + ":" + document.location.port,
     );
     websocket.binaryType = "arraybuffer";
 
