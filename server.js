@@ -24,7 +24,7 @@ const factory = (config) => {
       sources: config.sources.map(s => ({
         id: s.id,
         type: s.type,
-        uri: s.type === 'iframe' ? s.uri : undefined
+        uri: s.type === 'iframe' || s.type === 'go2rtc' ? s.uri : undefined
       })),
       layout: config.layout
     }

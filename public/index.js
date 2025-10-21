@@ -338,6 +338,49 @@ const MSGTYPE = {
     });
   }
 
+  function startGo2rtcSource(position, id, uri) {
+    const selector = ".vp" + position;
+    const vp = document.querySelector(selector);
+
+    if (!vp) {
+      console.log("No vp found", position);
+      return;
+    }
+
+    const video = document.createElement('video-stream');
+    video.mode = 'webrtc';
+    video.src = new URL(uri);
+    vp.appendChild(video);
+    console.log("Done", uri);
+
+    sources.set(id, {
+      handleData: (msgType, data) => {
+        console.log("handleData go2rtc", { msgType, data });
+
+        if (msgType === MSGTYPE.NOTIFICATION) {
+          // Notification
+          setTimeout(() => {
+            const span = document.querySelector(selector + " > span.notify");
+            span.style.display = "none";
+          }, 10000);
+          const span = document.querySelector(selector + " > span.notify");
+
+          const payload = JSON.parse(decoder.decode(data));
+
+          span.innerHTML = payload.message;
+          span.style.display = "block";
+
+          console.log(payload);
+          if (payload.type === "alert") {
+            playSound("alert.mp3");
+          } else {
+            playSound("mqtt.mp3");
+          }
+        }
+      },
+    });
+  }
+
   function startSource(sources, position, id) {
     if (id > 0) {
       const source = sources.find((s) => s.id === id);
@@ -347,6 +390,9 @@ const MSGTYPE = {
           break;
         case "iframe":
           startiFrameSource(position, id, source.uri);
+          break;
+        case "go2rtc": 
+          startGo2rtcSource(position, id, source.uri);
           break;
       }
     }

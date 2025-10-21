@@ -7,6 +7,7 @@ const factory = () => {
   const handlers = new Map()
   handlers.set('rtsp', require('./rtsp'))
   handlers.set('iframe', require('./iframe'))
+  handlers.set('go2rtc', require('./go2rtc'))
 
   return {
     start

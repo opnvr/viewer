@@ -5,7 +5,7 @@ const joi = require('joi')
 
 const schema = joi.object({
   sources: joi.array().items(joi.object({
-    type: joi.string().lowercase().allow('rtsp', 'iframe').required(),
+    type: joi.string().lowercase().allow('rtsp', 'iframe', 'go2rtc').required(),
     notifications: joi.array().items(joi.object({
       type: joi.string().lowercase().allow('hikvision', 'frigate').required()
     }).unknown(true)).single().default([])
