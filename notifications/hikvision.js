@@ -26,7 +26,7 @@ const factory = () => {
 
   function start (config, sourceConfig, itemConfig, server) {
     const log = require('loglevel').getLogger('notifications:hikvision-' + sourceConfig.id)
-    log.debug('Start')
+    log.info('Start')
 
     const inheritedConfig = {
       uri: convertToHttp(sourceConfig.uri), // convert rtsp urls used by the source to http for the hikvision notification
@@ -46,21 +46,25 @@ const factory = () => {
     })
 
     delimiterstream.on('data', function (chunk) {
+      
       const originalData = chunk.toString('utf8')
       const data = originalData.replace(regex, '<')
 
       if (data.indexOf('<EventNotificationAlert') > -1) {
+        
         parser.parseString(data, (err, result) => {
           if (err) {
             log.error('Failed', err)
           }
           if (result) {
+            
             if (result.EventNotificationAlert.eventState !== 'inactive' && result.EventNotificationAlert.eventType !== 'videoloss') {
               log.debug(sourceConfig.id, result.EventNotificationAlert.eventType, result.EventNotificationAlert.eventState)
               // log.debug('Data', data)
             }
 
             if (result.EventNotificationAlert && result.EventNotificationAlert.eventType === 'VMD') {
+              log.info('data', result)
               if (result.EventNotificationAlert.eventState === 'active') {
                 server.broadcast(sourceConfig.id, 50, new Uint8Array(1))
               } else {

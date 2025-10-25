@@ -339,6 +339,7 @@ const MSGTYPE = {
   }
 
   function startGo2rtcSource(position, id, uri) {
+    let motion = false;
     const selector = ".vp" + position;
     const vp = document.querySelector(selector);
 
@@ -354,10 +355,64 @@ const MSGTYPE = {
     console.log("Done", uri);
 
     sources.set(id, {
-      handleData: (msgType, data) => {
-        console.log("handleData go2rtc", { msgType, data });
+      handleData: (msgtype, data) => {
+        console.log("handleData go2rtc", { msgtype, data });
 
-        if (msgType === MSGTYPE.NOTIFICATION) {
+        if (msgtype === MSGTYPE.MOTION_START) {
+          // Motion start
+          console.log(`Camera ${id} motion start`);
+          if (!motion) {
+            motion = true;
+            setTimeout(() => {
+              const span = document.querySelector(selector + " > span.status");
+              span.innerHTML = "";
+              motion = false;
+            }, 10000);
+            playSound("motion.mp3", 0.25);
+            const span = document.querySelector(selector + " > span.status");
+            span.innerHTML = "MOTION";
+          }
+          return;
+        }
+
+        if (msgtype === MSGTYPE.MOTION_END) {
+          // Motion end
+          console.log(`Camera ${id} motion end`);
+          motion = false;
+          const span = document.querySelector(selector + " > span.status");
+          span.innerHTML = "";
+          return;
+        }
+
+        if (msgtype === MSGTYPE.LINECROSS_START) {
+          // line cross start
+          console.log(`Camera ${id} line cross start`);
+          if (!motion) {
+            motion = true;
+            setTimeout(() => {
+              const span = document.querySelector(
+                selector + " > span.linecross",
+              );
+              span.innerHTML = "";
+              motion = false;
+            }, 10000);
+            playSound("linecross.mp3");
+            const span = document.querySelector(selector + " > span.linecross");
+            span.innerHTML = "LINE";
+          }
+          return;
+        }
+
+        if (msgtype === MSGTYPE.LINECROSS_END) {
+          // line cross end
+          console.log(`Camera ${id} line cross end`);
+          motion = false;
+          const span = document.querySelector(selector + " > span.linecross");
+          span.innerHTML = "";
+          return;
+        }
+
+        if (msgtype === MSGTYPE.NOTIFICATION) {
           // Notification
           setTimeout(() => {
             const span = document.querySelector(selector + " > span.notify");
@@ -376,6 +431,45 @@ const MSGTYPE = {
           } else {
             playSound("mqtt.mp3");
           }
+        }
+
+        if (msgtype === MSGTYPE.OBJECT) {
+          const payload = JSON.parse(decoder.decode(data));
+
+          console.log("OBJECT", payload);
+          // Find the span with the id & delete
+          // Add a new span
+          // Translate box 640x360
+
+          const widthRatio = vp.clientWidth / 640;
+          const heightRatio = vp.clientHeight / 360;
+
+          const existingSpan = document.getElementById(payload.id);
+          if (existingSpan) {
+            existingSpan.remove();
+          }
+
+          if (!payload.endTime) {
+            const objectSpan = document.createElement("span");
+            const labelSpan = document.createElement("label");
+            labelSpan.innerText = payload.label;
+            objectSpan.appendChild(labelSpan);
+            objectSpan.setAttribute("id", payload.id);
+            objectSpan.setAttribute("class", "object");
+            const [x1, y1, x2, y2] = payload.box;
+            objectSpan.setAttribute(
+              "style",
+              `left: ${Math.trunc(x1 * widthRatio)}px; top: ${Math.trunc(y1 * heightRatio)}px; width: ${Math.trunc((x2 - x1) * widthRatio)}px; height: ${Math.trunc((y2 - y1) * heightRatio)}px`,
+            );
+            vp.appendChild(objectSpan);
+            scheduleSelectorRemoval(
+              payload.id,
+              "span#" + CSS.escape(payload.id),
+              10000,
+            );
+          }
+
+          return;
         }
       },
     });
